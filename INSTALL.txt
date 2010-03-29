@@ -1,0 +1,46 @@
+Installation
+============
+
+Prerequisites
+-------------
+
+RPC4Django has been tested on Mac OS, Linux and Windows.
+
+- `Python <http://www.python.org>`_ 2.4 - 2.6
+- `Django <http://www.djangoproject.com>`_ 1.0+ (tested through 1.2.0 alpha)
+- `Docutils <http://docutils.sourceforge.net>`_ (optional)
+
+Source Install Method
+---------------------
+This is the preferred method for installing RPC4Django.
+
+::
+
+    $> tar xvfz rpc4django-x.y.z.tar.gz 
+    $> cd rpc4django-x.y.z 
+    $> python setup.py install
+
+Easy Install Method
+-------------------
+
+::
+
+    $> easy_install rpc4django
+    
+Pip Install Method
+-------------------
+
+::
+
+    $> pip install rpc4django
+    
+No Installation Method
+----------------------
+This method installs RPC4Django only for one specific django project but does not require any special system access.
+
+::
+
+    $> tar xvfz rpc4django-x.y.z.tar.gz 
+    $> cd rpc4django-x.y.z 
+    $> cp -r rpc4django YOUR_DJANGO_PROJECT_DIRECTORY    
+

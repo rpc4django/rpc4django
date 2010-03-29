@@ -1,0 +1,93 @@
+Configuration
+=============
+
+Usual Setup
+-----------
+
+1. First, you need to add new url pattern to your root ``urls.py`` file. This file should be the one pointed to by ``ROOT_URLCONF`` in settings.py. You can replace ``r'^RPC2$'`` with anything you like. 
+  
+    ::
+    
+        # urls.py 
+        #... 
+        urlpatterns = patterns('', 
+            # if installed via no install method  
+            #(r'^RPC2$', 'YOURPROJECT.rpc4django.views.serve_rpc_request'),  
+            
+            # if installed via source or easy_install  
+            (r'^RPC2$', 'rpc4django.views.serve_rpc_request'), 
+        )
+    
+2. Second, add RPC4Django to the list of installed applications in your ``settings.py``. 
+
+    ::
+    
+        # settings.py 
+        #... 
+        INSTALLED_APPS = ( 
+            # if installed via no install  
+            #'YOURPROJECT.rpc4django',  
+            
+            # if installed via source or easy_install  
+            'rpc4django', 
+        )
+    
+3. Lastly, you need to let RPC4Django know which methods to make available. 
+   This is done with the decorator ``@rpcmethod``. RPC4Django recursively imports all the apps in ``INSTALLED_APPS`` 
+   and makes any methods importable via ``__init__.py`` with the ``@rpcmethod`` decorator available as RPC methods. 
+   You can always write your RPC methods in another module and simply import it in ``__init__.py``. 
+  
+    ::
+    
+        # testapp/__init__.py 
+        from rpc4django import rpcmethod 
+        
+        # This imports another method to be made available as an RPC method 
+        # This method should also have the @rpcmethod decorator 
+        # from mymodule import myrpcmethod 
+        
+        # The doc string supports reST if docutils is installed
+        @rpcmethod(name='mynamespace.add', signature=['int', 'int', 'int']) 
+        def add(a, b):
+            '''Adds two numbers together
+            >>> add(1, 2)  
+            3  
+            '''
+        
+            return a+b
+            
+            
+    The decorator ``@rpcmethod`` accepts three optional parameters:
+
+    - ``name`` - is the name under which the method will be made externally available. It defaults to the method's real name.
+    - ``signature`` - is the signature of the method and will be returned by calls to the XMLRPC introspection method ``system.methodSignature``. It is of the form: ``[return_value, arg1, arg2, arg3, ...]``. All of the types should be XMLRPC types (eg. struct, int, array, etc. -- see the XMLRPC `spec <http://www.xmlrpc.com/spec>`_ for details). Since python is relatively loosely typed, all types are set to object by default.
+    - ``permission`` - the Django `permission <http://docs.djangoproject.com/en/dev/topics/auth/#permissions>`_ required to execute this method **[new in 0.1.5]**
+
+Remotely Calling Methods
+------------------------
+
+XMLRPC
+%%%%%%
+
+XMLRPC libraries exist in virtually every major programming language. The usage varies from library to library, but I'll give a python example using the `xmlrpclib <http://docs.python.org/library/xmlrpclib.html>`_ standard library:
+
+::
+
+	from xmlrpclib import ServerProxy
+	s = ServerProxy('http://localhost:8000')
+	s.system.listMethods()
+	
+JSONRPC
+%%%%%%%
+
+JSONRPC is less mature than XMLRPC and libraries are not as common. However, one of the main benefits of JSONRPC is that it can be used more easily from Javascript or Actionscript since JSON is their native format. 
+There is an older JSONRPC library for python on `json-rpc.org <http://json-rpc.org>`_. 
+Here is an example using that library:
+
+::
+
+	from jsonrpc import ServiceProxy
+	s = ServiceProxy('http://localhost:8000')
+	s.rpc4django.mytestmethod(1,2,3)
+
+For an example of JSONRPC being used from Javascript running in a browser, please see the `demo site <http://rpc4django.davidfischer.name/>`_.

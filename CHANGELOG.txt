@@ -1,0 +1,57 @@
+Changelog
+=========
+
+**Version 0.1.7 (19 January 2010)**
+
+- Fixed a bug relating to CSRF
+- Added feature to allow recursive imports of RPC methods
+
+**Version 0.1.6 (13 January 2010)**
+
+- Changed the XMLRPC dispatcher to allow sending `nil <http://ontosys.com/xml-rpc/extensions.php>`_ which translates to the Python ``None``. This was already allowed with JSONRPC
+- Cross site request forgery (CSRF_) framework support
+- Added cross domain `access control <https://developer.mozilla.org/en/HTTP_access_control>`_
+- Added unit tests for base64 encoded binary
+- Added access to HttpRequest object form inside a called RPC method
+
+.. _CSRF: http://docs.djangoproject.com/en/dev/ref/contrib/csrf/
+
+**Version 0.1.5 (4 October 2009)**
+
+- Authenticated view that ties in with Django's `auth <http://docs.djangoproject.com/en/dev/topics/auth>`_ system
+- Added unicode unit test cases to verify that RPC4Django supports unicode (it does!)
+- Added `authenticated demo site <https://rpcauth.davidfischer.name>`_ (user = pass = rpc4django, self signed certificate)
+- Improved the documentation stylesheet 
+
+**Version 0.1.4 (31 August 2009)**
+
+- Provided a workaround for the bug relating to `Django Bug #6681 <http://code.djangoproject.com/ticket/6681>`_.
+- Provided the settings.py option ``RPC4DJANGO_RESTRICT_REST`` which forces RPC4Django to not attempt to convert any of the method summary docstrings to restructured text.
+
+**Version 0.1.3 (15 July 2009)**
+
+- Fixed a serious bug where RPC4Django relied on ``request.META['CONTENT_TYPE']`` to be set by the web server
+- Added generator tag to the template with RPC4Django and the version
+- Renamed ``RPC4DJANGO_RESTRICT_DOCUMENTATION`` to ``RPC4DJANGO_RESTRICT_METHOD_SUMMARY`` for clarity
+- Built out the example better so that it could be deployed as a `demo <http://rpc4django.davidfischer.name>`_ without modification
+- Improved JSON output formatting to be consistent with SimpleXMLRPCDispatcher's XML output
+
+**Version 0.1.2 (13 July 2009)**
+
+- Improved unit testing including adding support for `testing views <http://docs.djangoproject.com/en/dev/topics/testing/#making-requests>`_
+- Fixed a minor bug involving the incorrect use of xmlrpclib.Fault which was causing some errors to be reported with the wrong error message
+- Fetched the URL for the simple method descriptor using `reverse() <http://docs.djangoproject.com/en/dev/topics/http/urls/#reverse>`_
+- Enabled testing an RPC method directly from the method summary
+- Fixed some failing unit tests on older python versions
+
+**Version 0.1.1 (11 July 2009)**
+
+- Improved documentation by integrating `reST <http://docutils.sourceforge.net/rst.html>`_
+- Allowed reST markup in rpcmethod docstrings
+- Fix easy_install problems related to django templates
+- Tested version compatibility
+- Allowed analyzing post data when content-type cannot tell whether the data is XML or JSON
+
+**Version 0.1.0 (6 July 2009)**
+
+- First version of RPC4Django

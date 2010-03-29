@@ -1,0 +1,3 @@
+recursive-include docs *.html *.css
+recursive-include rpc4django/templates/rpc4django *.html
+include *.txt

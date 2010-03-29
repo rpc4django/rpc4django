@@ -1,0 +1,5 @@
+Planned Features
+================
+
+- Add `JSON class hinting <http://json-rpc.org/wiki/specification#a3.JSONClasshinting>`_
+- Any requested features

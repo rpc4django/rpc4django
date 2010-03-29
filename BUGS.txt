@@ -1,0 +1,8 @@
+Known Issues
+============
+
+- There is a known issue that relates to but is not the same as `Django Bug #6681 <http://code.djangoproject.com/ticket/6681>`_.
+  This bug sometimes raises an ``AttributeError: Values instance has no attribute 'default_reference_context'`` error when converting text to reST.
+  The bug is very difficult to reproduce and the workaround specified in the Django bug is not relevant to RPC4Django since it does not change the default docutils role.
+  A workaround is provided such that the exception is caught and the ``rpc4django.templatetags.rpctags.resttext`` function will return the plain text if ``publish_parts`` fails for any reason.
+  This error is logged as fatal by RPC4Django's logger.
