@@ -1,0 +1,23 @@
+RPC4Django documentation
+========================
+
+Handles JSONRPC and XMLRPC requests easily with Django
+
+Contents:
+
+.. toctree::
+   :maxdepth: 2
+   
+   overview
+   license
+   setup
+   getting-involved/index
+   changelog
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+

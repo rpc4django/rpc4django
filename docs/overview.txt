@@ -1,0 +1,44 @@
+Overview
+========
+
+RPC4Django is an XMLRPC and JSONRPC server for Django powered projects. 
+Simply plug it into any existing Django project and you can make your 
+methods available via XMLRPC and JSONRPC. In addition, it can display nice 
+documentation about the methods it makes available in a more customizable 
+way than DocXMLRPCServer_. 
+
+RPC4Django is not affiliated with the `Django Project`_.
+
+.. _DocXMLRPCServer: http://docs.python.org/library/docxmlrpcserver.html
+.. _Django Project: http://djangoproject.com
+
+Features
+--------
+
+- Detects request type (JSONRPC or XMLRPC) based on content
+- Easy identification of RPC methods via a decorator
+- Pure python and requires no external modules except Django
+- Customizable RPC method documentation including reST_ 
+- Supports XMLRPC and JSONRPC introspection
+- Supports method signatures (unlike SimpleXMLRPCServer)
+- Easy installation and integration with existing Django projects
+- Licensed for inclusion in open source and commercial software
+- Ties in with Django's `authentication and authorization`_
+
+.. _reST: http://docutils.sourceforge.net/rst.html
+.. _authentication and authorization: http://docs.djangoproject.com/en/dev/topics/auth
+
+Demo Sites
+----------
+
+- http://rpc4django.davidfischer.name
+- https://rpcauth.davidfischer.name (user = pass = rpc4django, self signed certificate)
+
+.. _contributors:
+
+Contributors
+------------
+- `David Fischer`_ (`wish list`_)
+
+.. _David Fischer: mailto:rpc4django@davidfischer.name
+.. _wish list: http://amzn.com/w/1Z1GLQYQPFBT1
