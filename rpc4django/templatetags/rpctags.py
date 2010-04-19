@@ -1,10 +1,8 @@
 '''
-RPCTags
--------
+Creates a template tag that can handle `restructured text`_ (reST)
 
-Creates a template tag that can handle restructured text
+.. _restructured text: http://docutils.sourceforge.net/rst.html
 
-`reST <http://docutils.sourceforge.net/rst.html>`_ format
 '''
 
 import logging
@@ -19,9 +17,10 @@ register = template.Library()
 
 def resttext(text):
     '''
-    Returns the passed text in 
-    `reST <http://docutils.sourceforge.net/rst.html>`_ format
-    or text if resttext fails to import docutils or fails for any other reason
+    Returns *text* in reST format or plain text if resttext fails 
+    to import docutils or fails for any other reason
+    
+    If :envvar:`RPC4DJANGO_RESTRICT_REST` is ``True``, just return *text*
     '''
     
     overrides = {
@@ -40,7 +39,7 @@ def resttext(text):
     except ImportError:
         return text
     except Exception, ex1:
-        # see BUGS.txt
+        # see Django Bug #6681
         logging.fatal(repr(ex1))
         return text
     

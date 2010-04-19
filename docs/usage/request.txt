@@ -1,0 +1,23 @@
+Access to HttpRequest
+=====================
+
+RPC4Django allows RPC methods to be written in such a way that they have
+access to Django's HttpRequest_ object. This can be used
+to see the type of request, the user making the request or any specific
+headers in the request object. To use this, methods must be written such 
+that they can accept arbitrary
+keyword arguments. Although currently only the HttpRequest object is sent,
+additional keyword arguments may be sent in the future.
+
+.. _HttpRequest: http://docs.djangoproject.com/en/dev/ref/request-response/
+
+::
+
+ @rpcmethod(name='rpc4django.httprequest',signature=['string'])
+ def request(**kwargs):
+     '''
+     Illustrates access to the HttpRequest object
+     '''
+     
+     return str(kwargs.get('request', None))
+     

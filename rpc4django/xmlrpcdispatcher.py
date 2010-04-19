@@ -12,8 +12,8 @@ class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
     Encodes and decodes XMLRPC messages, dispatches to the requested method
     and returns any responses or errors in encoded XML.
     
-    This class is modified from the built-in python version so that it can
-    also pass the HttpRequest object from the underlying request
+    Subclasses SimpleXMLRPCDispatcher so that it can
+    also pass the Django HttpRequest object from the underlying RPC request
     """
     
     def __init__(self):

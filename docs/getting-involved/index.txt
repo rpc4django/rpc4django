@@ -2,23 +2,8 @@ Getting involved
 ================
 
 .. toctree::
-   :hidden:
    
-Get the source code
--------------------
-
-The source code for RPC4Django is hosted in Launchpad_.
-
-.. _Launchpad: https://launchpad.net/rpc4django
-
-Reporting bugs
---------------
-
-Bugs should be reported on bugs.launchpad.net_.
-
-.. _bugs.launchpad.net: https://bugs.launchpad.net/rpc4django
-
-.. note:: **Security vulnerabilities**
-
-   If this is a serious security vulnerability, please instead email the
-   :ref:`contributors` and give us a chance to fix it before going public.
+   launchpad
+   releasing
+   testing
+   

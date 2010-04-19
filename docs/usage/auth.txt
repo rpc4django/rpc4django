@@ -1,0 +1,61 @@
+Authentication
+==============
+
+RPC4Django can be used with authenticated HTTP(s) requests and Django's 
+`auth <http://docs.djangoproject.com/en/dev/topics/auth>`_ framework.
+
+.. note:: **A note about versions**
+
+  It uses `RemoteUserMiddleware`_ or another derived middleware which is only 
+  built-in to Django 1.1 and higher. It is possible to use it
+  with Django versions prior to 1.1, but it would require the 
+  ``RemoteUserMiddleware`` and the ``RemoteUserBackend`` to be added manually.
+
+  .. _RemoteUserMiddleware: http://docs.djangoproject.com/en/1.1/howto/auth-remote-user/
+
+Setup
+-----
+
+Firstly, the webserver should be configured to use basic HTTP authentication or some sort of single sign on (SSO) solution.
+
+In settings.py, the following changes need to be made:
+
+::
+
+	MIDDLEWARE_CLASSES = (
+	    # ...
+	    # Must be enabled for RPC4Django authenticated method calls
+	    'django.contrib.auth.middleware.AuthenticationMiddleware',
+	    
+	    # Required for RPC4Django authenticated method calls
+	    # Requires Django 1.1+
+	    'django.contrib.auth.middleware.RemoteUserMiddleware',
+	)
+	
+	# Required for RPC4Django authenticated method calls
+	# Requires Django 1.1+
+	AUTHENTICATION_BACKENDS = (
+	    'django.contrib.auth.backends.RemoteUserBackend',
+	)
+
+Usage
+-----
+
+To protect a method, it needs to be defined with the ``@rpcmethod`` decorator and the ``permission`` parameter.
+
+::
+
+	from rpc4django import rpcmethod
+	
+	@rpcmethod(name='rpc4django.secret', signature=['string'], permission='auth.add_group')
+	def secret():
+	    return "Successfully called a protected method"
+
+To call an authenticated method from the Python command prompt, use the following:
+
+::
+
+	from xmlrpclib import ServerProxy
+	s = ServerProxy('https://username:password@example.com')
+	s.rpc4django.secret()
+	

@@ -1,0 +1,31 @@
+Get the source code
+-------------------
+
+The source code for RPC4Django is in the Bazaar_ version controls system
+hosted by Launchpad_. It can be branched using the following command:
+
+::
+
+    bzr branch lp:rpc4django
+
+.. _Bazaar: http://bazaar.canonical.com
+.. _Launchpad: https://launchpad.net/rpc4django
+
+Reporting bugs
+--------------
+
+Bugs should be reported on bugs.launchpad.net_.
+
+.. _bugs.launchpad.net: https://bugs.launchpad.net/rpc4django
+
+.. note:: **Security vulnerabilities**
+
+   If this is a serious security vulnerability, please instead email the
+   :ref:`contributors` and give us a chance to fix it before going public.
+   
+Requesting features
+-------------------
+
+Features should be requested on blueprints.launchpad.net_.
+
+.. _blueprints.launchpad.net: https://blueprints.launchpad.net/rpc4django

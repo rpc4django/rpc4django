@@ -1,10 +1,7 @@
 '''
-RPC Dispatcher
---------------
-
 This module contains the classes necessary to handle both
-`jsonrpc <http://json-rpc.org/>`_ and 
-`xmlrpc <http://www.xmlrpc.com/>`_ requests. 
+`JSONRPC <http://json-rpc.org/>`_ and 
+`XMLRPC <http://www.xmlrpc.com/>`_ requests. 
 It also contains a decorator to mark methods as rpc methods.
 '''
 
@@ -25,10 +22,28 @@ def rpcmethod(**kwargs):
     '''
     Accepts keyword based arguments that describe the method's rpc aspects
 
-    EXAMPLES:
-    @rpcmethod()
-    @rpcmethod(name='myns.myFuncName', signature=['int','int'])
-    @rpcmethod(permission='add_group')
+    **Parameters**
+    
+    ``name`` 
+      the name of the method to make available via RPC.
+      Defaults to the method's actual name
+    ``signature`` 
+      the signature of the method that will be returned by 
+      calls to the XMLRPC introspection method ``system.methodSignature``. 
+      It is of the form: [return_value, arg1, arg2, arg3, ...]. 
+      All of the types should be XMLRPC types 
+      (eg. struct, int, array, etc. - see the XMLRPC spec for details). 
+    ``permission`` 
+      the Django permission required to execute this method
+    
+    **Examples**
+    
+    ::
+    
+        @rpcmethod()
+        @rpcmethod(name='myns.myFuncName', signature=['int','int'])
+        @rpcmethod(permission='add_group')
+        
     '''
     
     def set_rpcmethod_info(method):
@@ -51,10 +66,26 @@ def rpcmethod(**kwargs):
 
 class RPCMethod:
     '''
-    A method available via the rpc dispatcher
+    A method available to be called via the rpc dispatcher
+    
+    **Attributes**
+    
+    ``method``
+      The underlying Python method to call when this method is invoked
+    ``help``
+      Help message (usually the docstring) printed by the introspection
+      functions when detail about a method is requested
+    ``name``
+      name of the method by which it can be called
+    ``signature``
+      See :meth:`rpc4django.rpcdispatcher.rpcmethod`
+    ``permission``
+      Any Django permissions required to call this method
+    
     '''
     
     def __init__(self, method, name=None, signature=None, docstring=None):
+        
         self.method = method
         self.help = ''
         self.signature = []
@@ -98,7 +129,9 @@ class RPCMethod:
            
     def get_stub(self):
         '''
-        Returns a stub json for an jsonrpc request for this method
+        Returns JSON for a JSONRPC request for this method
+        
+        This is used to generate the introspection method output
         '''
         
         params = self.get_params()
@@ -149,7 +182,27 @@ class RPCMethod:
 
 class RPCDispatcher:
     '''
-    Dispatches method calls to either the xmlrpc or jsonrpc dispatcher
+    Keeps track of the methods available to be called and then
+    dispatches method calls to either the 
+    :class:`XMLRPCDispatcher <rpc4django.xmlrpcdispatcher.XMLRPCDispatcher>`
+    or the 
+    :class:`JSONRPCDispatcher <rpc4django.jsonrpcdispatcher.JSONRPCDispatcher>`
+    
+    **Attributes**
+
+    ``url``
+      The URL that handles RPC requests (eg. ``/RPC2``)
+      This is needed by ``system.describe``.
+    ``rpcmethods``
+      A list of :class:`RPCMethod<rpc4django.rpcdispatcher.RPCMethod>` instances
+      available to be called by the dispatcher
+    ``xmlrpcdispatcher``
+      An instance of :class:`XMLRPCDispatcher <rpc4django.xmlrpcdispatcher.XMLRPCDispatcher>`
+      where XMLRPC calls are dispatched to using :meth:`xmldispatch`
+    ``jsonrpcdispatcher``
+      An instance of :class:`JSONRPCDispatcher <rpc4django.jsonrpcdispatcher.JSONRPCDispatcher>`
+      where JSONRPC calls are dispatched to using :meth:`jsondispatch`
+      
     '''
     
     def __init__(self, url='', apps=[], restrict_introspection=False):
@@ -249,14 +302,14 @@ class RPCDispatcher:
     
     def jsondispatch(self, raw_post_data, **kwargs):
         '''
-        Sends the post data to a jsonrpc processor
+        Sends the post data to :meth:`rpc4django.jsonrpcdispatcher.JSONRPCDispatcher.dispatch`
         '''
         
         return self.jsonrpcdispatcher.dispatch(raw_post_data, **kwargs)
     
     def xmldispatch(self, raw_post_data, **kwargs):
         '''
-        Sends the post data to an xmlrpc processor
+        Sends the post data to :meth:`rpc4django.xmlrpcdispatcher.XMLRPCDispatcher.dispatch`
         '''
         
         return self.xmlrpcdispatcher.dispatch(raw_post_data, **kwargs)
@@ -295,7 +348,23 @@ class RPCDispatcher:
     
     def register_method(self, method, name=None, signature=None, helpmsg=None):
         '''
-        Registers a method with the rpc server
+        Instantiates an RPCMethod object and adds it to ``rpcmethods``
+        so that it can be called by RPC requests
+        
+        **Parameters**
+        
+        ``method``
+          A callable Python method that the dispatcher will delegate to when
+          requested via RPC
+        ``name``
+          The name to make the method availabe. ``None`` signifies to use
+          the method's actual name
+        ``signature``
+          The signature of the method. See :meth:`rpc4django.rpcdispatcher.rpcmethod`
+        ``helpmsg``
+          The "help" message displayed by introspection functions asking about
+          the method
+          
         '''
 
         meth = RPCMethod(method, name, signature, helpmsg)

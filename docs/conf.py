@@ -13,7 +13,9 @@
 
 import sys, os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 import rpc4django
+os.environ['DJANGO_SETTINGS_MODULE'] = 'example.settings'
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the

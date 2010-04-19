@@ -1,0 +1,18 @@
+Unit testing
+============
+
+All unit tests can be `run`_ using ``manage.py``
+
+.. _run: http://docs.djangoproject.com/en/dev/topics/testing/#id1
+
+::
+
+	python manage.py test rpc4django
+	
+Some tests require ``DJANGO_SETTINGS_MODULE`` to be set. The test cases that do not require
+the Django environment can be run using the following:
+
+::
+
+	python setup.py test
+	

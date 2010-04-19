@@ -1,14 +1,14 @@
 '''
-Views
+The main entry point for RPC4Django. Usually, the user simply puts
+:meth:`serve_rpc_request <rpc4django.views.serve_rpc_request>` into ``urls.py``
 
-This module contains the method serve_rpc_request which is intended to
-be called from the urls.py module of a 
-`django <http://www.djangoproject.com/>`_ project.
+::
 
-It should be called like this from urls.py:
-
-    (r'^RPC2$', 'rpc4django.views.serve_rpc_request'),
-
+    urlpatterns = patterns('', 
+        # rpc4django will need to be in your Python path  
+        (r'^RPC2$', 'rpc4django.views.serve_rpc_request'), 
+    )
+    
 '''
 
 import logging
@@ -43,19 +43,17 @@ HTTP_ACCESS_ALLOW_ORIGIN = getattr(settings,
 # these will be scanned for @rpcmethod decorators
 APPS = getattr(settings, 'INSTALLED_APPS', [])
 
-def _check_request_permission(request, request_format='xml'):
+def check_request_permission(request, request_format='xml'):
     '''
-    Checks whether this user has permission to perform the specified action
+    Checks whether this user has permission to call a particular method
     This method does not check method call validity. That is done later
     
-    PARAMETERS
+    **Parameters**
     
     - ``request`` - a django HttpRequest object
     - ``request_format`` - the request type: 'json' or 'xml' 
     
-    RETURNS 
-    
-    True if the request is valid and False if permission is denied
+    Returns ``False`` if permission is denied and ``True`` otherwise
     '''
     
     user = getattr(request, 'user', None)
@@ -88,19 +86,18 @@ def _check_request_permission(request, request_format='xml'):
     
     return response
     
-def _is_xmlrpc_request(request):
+def is_xmlrpc_request(request):
     '''
     Determines whether this request should be served by XMLRPC or JSONRPC
     
-    Returns true if this is an XML request and false for JSON
+    Returns ``True`` if this is an XML request and false for JSON
     
-    It is based on the following rules:
+    1. If there is no post data, display documentation
+    2. content-type = text/xml or application/xml => XMLRPC
+    3. content-type contains json or javascript => JSONRPC
+    4. Try to parse as xml. Successful parse => XMLRPC
+    5. JSONRPC
     
-    # If there is no post data, display documentation
-    # content-type = text/xml or application/xml => XMLRPC
-    # content-type contains json or javascript => JSONRPC
-    # Try to parse as xml. Successful parse => XMLRPC
-    # JSONRPC
     '''
     
     conttype = request.META.get('CONTENT_TYPE', 'unknown type')
@@ -127,7 +124,15 @@ def _is_xmlrpc_request(request):
 
 def serve_rpc_request(request):
     '''
-    This method handles rpc calls based on the content type of the request
+    Handles rpc calls based on the content type of the request or
+    returns the method documentation page if the request
+    was a GET.
+    
+    **Parameters**
+    
+    ``request``
+        the Django HttpRequest object
+        
     '''
 
     if request.method == "POST" and len(request.POST) > 0:
@@ -136,11 +141,11 @@ def serve_rpc_request(request):
         if LOG_REQUESTS_RESPONSES:
             logging.debug('Incoming request: %s' %str(request.raw_post_data))
             
-        if _is_xmlrpc_request(request):
+        if is_xmlrpc_request(request):
             if RESTRICT_XML:
                 raise Http404
             
-            if not _check_request_permission(request, 'xml'):
+            if not check_request_permission(request, 'xml'):
                 return HttpResponseForbidden()
             
             resp = dispatcher.xmldispatch(request.raw_post_data, \
@@ -150,7 +155,7 @@ def serve_rpc_request(request):
             if RESTRICT_JSON:
                 raise Http404
             
-            if not _check_request_permission(request, 'json'):
+            if not check_request_permission(request, 'json'):
                 return HttpResponseForbidden()
             
             resp = dispatcher.jsondispatch(request.raw_post_data, \

@@ -63,21 +63,16 @@ Configuration
         )
     
 3. Lastly, you need to let RPC4Django know which methods to make available. 
-   This is done with the decorator ``@rpcmethod``. RPC4Django recursively 
-   imports all the apps in ``INSTALLED_APPS`` 
+   TRPC4Django recursively imports all the apps in ``INSTALLED_APPS`` 
    and makes any methods importable via ``__init__.py`` with the 
-   ``@rpcmethod`` decorator available as RPC methods. 
-   You can always write your RPC methods in another module and simply import 
-   it in ``__init__.py``. 
+   :meth:`@rpcmethod <rpc4django.rpcdispatcher.rpcmethod>` decorator available 
+   as RPC methods. You can always write your RPC methods in another module and 
+   simply import it in ``__init__.py``. 
   
     ::
     
         # testapp/__init__.py 
         from rpc4django import rpcmethod 
-        
-        # This imports another method to be made available as an RPC method 
-        # This method should also have the @rpcmethod decorator 
-        # from mymodule import myrpcmethod 
         
         # The doc string supports reST if docutils is installed
         @rpcmethod(name='mynamespace.add', signature=['int', 'int', 'int']) 
@@ -89,15 +84,3 @@ Configuration
         
             return a+b
             
-    .. BREAKPOINT
-    .. This breakpoint is used in setup.py to not import the rest
-    .. This is needed due to sphinx specific markup
-            
-    The ``@rpcmethod`` decorator accepts three optional parameters:
-
-    - ``name`` - is the name under which the method will be made externally available. It defaults to the method's real name.
-    - ``signature`` - is the signature of the method and will be returned by calls to the XMLRPC introspection method ``system.methodSignature``. It is of the form: ``[return_value, arg1, arg2, arg3, ...]``. All of the types should be XMLRPC types (eg. struct, int, array, etc. -- see the XMLRPC `spec <http://www.xmlrpc.com/spec>`_ for details). Since python is relatively loosely typed, all types are set to object by default.
-
-    .. versionadded:: 0.1.5  
-    
-    - ``permission`` - the Django `permission <http://docs.djangoproject.com/en/dev/topics/auth/#permissions>`_ required to execute this method 

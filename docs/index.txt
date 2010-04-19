@@ -1,7 +1,7 @@
 RPC4Django documentation
 ========================
 
-Handles JSONRPC and XMLRPC requests easily with Django
+RPC4Django handles JSONRPC and XMLRPC requests easily.
 
 Contents:
 
@@ -9,15 +9,9 @@ Contents:
    :maxdepth: 2
    
    overview
-   license
    setup
+   usage/index
    getting-involved/index
+   apidocs/index
+   license
    changelog
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-

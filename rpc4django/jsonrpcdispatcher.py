@@ -1,7 +1,4 @@
 '''
-JSONRPC Dispatcher
-------------------
-
 This module implements a JSON 1.0 compatible dispatcher
 
 see http://json-rpc.org/wiki/specification
@@ -38,8 +35,6 @@ JSONRPC_PROCEDURE_NOT_FOUND_ERROR = 105
     
 class JSONRPCDispatcher:
     '''
-    JSONRPC Dispatcher
-    
     This class can be used encode and decode jsonrpc messages, dispatch
     the requested method with the passed parameters, and return any response
     or error.
@@ -82,16 +77,16 @@ class JSONRPCDispatcher:
         '''
         Verifies that the passed json encoded string 
         is in the correct form according to the json-rpc spec
-        and calls the appropriate method
+        and calls the appropriate Python method
         
-        Checks:
+        **Checks**
+        
          1. that the string encodes into a javascript Object (dictionary)
          2. that 'method' and 'params' are present
          3. 'method' must be a javascript String type
          4. 'params' must be a javascript Array type
          
-        Returns:
-         the JSON encoded response
+        Returns the JSON encoded response
         '''
         
         try:

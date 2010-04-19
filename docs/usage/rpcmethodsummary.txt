@@ -1,0 +1,26 @@
+Method Summary
+===============
+
+- The method summary displays docstrings, signatures, and names from methods 
+  marked with the :meth:`@rpcmethod <rpc4django.rpcdispatcher.rpcmethod>`
+  decorator.
+  
+- The method summary allows testing of methods via JSONRPC 
+  unless it is disabled by :envvar:`RPC4DJANGO_RESTRICT_RPCTEST`
+  
+- The summary is served from a template 
+  ``rpc4django/rpcmethod_summary.html`` and can be customized in a similar way 
+  to the `django admin`_.
+  
+  .. _django admin: http://docs.djangoproject.com/en/dev/intro/tutorial02/#customize-the-admin-look-and-feel
+  
+- The method summary supports `reST`_ in docstrings if the docutils_ library  
+  is installed. Plain text is used otherwise. ReST warnings and errors are not 
+  reported in the output.
+
+  .. _reST: http://docutils.sourceforge.net/rst.html
+  .. _docutils: http://docutils.sourceforge.net
+  
+- The method summary can be completely disabled with 
+  :envvar:`RPC4DJANGO_RESTRICT_METHOD_SUMMARY`
+  
