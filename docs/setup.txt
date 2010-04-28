@@ -63,7 +63,7 @@ Configuration
         )
     
 3. Lastly, you need to let RPC4Django know which methods to make available. 
-   TRPC4Django recursively imports all the apps in ``INSTALLED_APPS`` 
+   RPC4Django recursively imports all the apps in ``INSTALLED_APPS`` 
    and makes any methods importable via ``__init__.py`` with the 
    :meth:`@rpcmethod <rpc4django.rpcdispatcher.rpcmethod>` decorator available 
    as RPC methods. You can always write your RPC methods in another module and 

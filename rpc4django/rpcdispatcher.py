@@ -287,7 +287,8 @@ class RPCDispatcher:
             for obj in dir(app):
                 method = getattr(app, obj)
                 if callable(method) and \
-                   hasattr(method, 'is_rpcmethod'):
+                   hasattr(method, 'is_rpcmethod') and \
+                   method.is_rpcmethod == True:
                     # if this method is callable and it has the rpcmethod
                     # decorator, add it to the dispatcher
                     self.register_method(method, method.external_name)

@@ -4,8 +4,11 @@ Changelog
 **Version 0.1.8 (April 2010)**
 
 - Added cross referenced Sphinx_ based documentation
+- Fixed `bug #570852`_ which caused incompatibilities with MongoDB because
+  of the name class with the variable ``is_rpcmethod``.
 
 .. _Sphinx: http://sphinx.pocoo.org
+.. _bug #570852: https://bugs.launchpad.net/rpc4django/+bug/570852
 
 **Version 0.1.7 (19 January 2010)**
 
