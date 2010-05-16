@@ -11,7 +11,10 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os
+import os
+import sys
+from datetime import datetime
+
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
 import rpc4django
@@ -41,8 +44,8 @@ source_suffix = '.txt'
 master_doc = 'index'
 
 # General information about the project.
-project = u'RPC4Django'
-copyright = u'2010, %s' %rpc4django.__author__
+project = u'%s' %rpc4django.__modulename__
+copyright = u'%d, %s' %(datetime.now().year, rpc4django.__author__)
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

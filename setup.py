@@ -205,7 +205,7 @@ long_description = """========================
 RPC4Django Documentation
 ========================
 
-""" + open('INSTALL.txt').read() + open('CONFIGURATION.txt').read()
+""" + open('docs/setup.txt').read()
 
 setup(
       name = rpc4django.__modulename__,
