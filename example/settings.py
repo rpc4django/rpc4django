@@ -2,6 +2,8 @@
 
 # Handle logging for this project
 import logging
+import os
+import sys
 logging.basicConfig(
     level = logging.DEBUG,
     format = '%(asctime)s %(levelname)s %(message)s',
@@ -16,7 +18,7 @@ RPC4DJANGO_RESTRICT_METHOD_SUMMARY = False
 RPC4DJANGO_RESTRICT_RPCTEST = False
 RPC4DJANGO_RESTRICT_REST = False
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -97,6 +99,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.abspath(os.path.join(os.path.dirname(__file__), 'templates')),
 )
 
 INSTALLED_APPS = (

@@ -74,8 +74,7 @@ class CleanCommand(EasyCommand):
         Removes intermediate files
         '''
 
-        self.remove('docs/index.html')
-        self.remove('docs/index.html.zip')
+        self.remove('docs/_build/html')
         self.remove('dist')
         self.remove('build')
         self.remove('rpc4django.egg-info')
@@ -223,7 +222,6 @@ setup(
                   'rpc4django.tests.testmod', 
                   'rpc4django.tests.testmod.testsubmod', 
                   'rpc4django.templatetags',
-                  'example',
                  ],
       data_files = [('rpc4django/templates/rpc4django', 
                      ['rpc4django/templates/rpc4django/rpcmethod_summary.html'])],
