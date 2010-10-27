@@ -208,12 +208,6 @@ def serve_rpc_request(request):
         return render_to_response('rpc4django/rpcmethod_summary.html', \
                                   template_data)
 
-# reverse the method for use with system.describe and ajax
-try:
-    URL = reverse(serve_rpc_request)
-except NoReverseMatch:
-    URL = ''
-    
 # exclude from the CSRF framework because RPC is intended to be used cross site
 try:
     # Django 1.2
@@ -229,7 +223,13 @@ except ImportError:
 if csrf_exempt is not None:
     serve_rpc_request = csrf_exempt(serve_rpc_request)
 
+# reverse the method for use with system.describe and ajax
+try:
+    URL = reverse(serve_rpc_request)
+except NoReverseMatch:
+    URL = ''
     
 # instantiate the rpcdispatcher -- this examines the INSTALLED_APPS
 # for any @rpcmethod decorators and adds them to the callable methods
 dispatcher = RPCDispatcher(URL, APPS, RESTRICT_INTROSPECTION) 
+
