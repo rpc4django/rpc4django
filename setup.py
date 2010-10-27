@@ -82,62 +82,6 @@ class CleanCommand(EasyCommand):
 
 cmdclasses['clean'] = CleanCommand
 
-class DiffCommand(EasyCommand):
-    """
-    Creates a subversion diff from root of the package
-    """
-
-    def run(self):
-        """
-        Writes a subversion diff to rpc4django.diff
-        """
-
-        try:
-            output = Popen(["svn", "diff"], stdout=PIPE).communicate()[0]
-        except OSError:
-            print 'Failed diff - svn not in path'
-            return
-        
-        f = open('rpc4django.diff', 'w')
-        f.write(output)
-        f.close()
-        print 'Wrote rpc4django.diff'
-
-cmdclasses['diff'] = DiffCommand
-
-class DocsCommand(EasyCommand):
-    """
-    Creates documentation from the ReST files and generates a zip file for 
-    upload to packages.python.org
-    """
-
-    def run(self):
-        """
-        Generates documentation
-        """
-
-        try:
-            output = Popen(['rst2html.py', 
-                            '--title="RPC4Django Documentation"', 
-                            '--initial-header-level=2', 
-                            '--stylesheet=docs/voidspace.css',
-                            'README.txt',
-                            ], stdout=PIPE).communicate()[0]
-        except OSError:
-            print 'Failed to generate docs -- rst2html.py not in path'
-            return
-        
-        f = open('docs/index.html', 'w')
-        f.write(output)
-        f.close()
-        print 'Generated docs/index.html'
-
-        z = zipfile.ZipFile('docs/index.html.zip', 'w', zipfile.ZIP_DEFLATED)
-        z.write('docs/index.html', 'index.html')
-        z.close()
-        print 'Zipped docs/index.html for upload to packages.python.org'
-
-cmdclasses['docs'] = DocsCommand
 
 ## BEGIN DJANGO CODE ##
 # This code below is directly stolen from the Django setup.py:

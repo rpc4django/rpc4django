@@ -1,7 +1,7 @@
 Changelog
 =========
 
-**Version 0.1.8 (April 2010)**
+**Version 0.1.8 (26 October 2010)**
 
 - Added cross referenced Sphinx_ based documentation
 - Fixed `bug #570852`_ which caused incompatibilities with MongoDB because
