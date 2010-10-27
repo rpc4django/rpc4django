@@ -70,14 +70,15 @@ Out of the Box Authentication
 By setting :envvar:`RPC4DJANGO_RESTRICT_OOTB_AUTH` to ``False``, 
 :meth:`system.login <rpc4django.rpcdispatcher.RPCDispatcher.system_login>` and 
 :meth:`system.logout <rpc4django.rpcdispatcher.RPCDispatcher.system_logout>` 
-methods will be enabled. These rely on Django's SessionMiddleware_.
+methods will be enabled. These rely on Django's SessionMiddleware_ which requires
+a cookie-aware transport.
 
 .. _SessionMiddleware: http://docs.djangoproject.com/en/dev/topics/http/sessions/#enabling-sessions
 
 ::
 
     from xmlrpclib import ServerProxy
-    s = ServerProxy('https://example.com')
+    s = ServerProxy('https://example.com', transport=CookieTransport())
     
     s.rpc4django.secret()   # 403 Forbidden
     
