@@ -28,6 +28,8 @@ LOG_REQUESTS_RESPONSES = getattr(settings,
                                  'RPC4DJANGO_LOG_REQUESTS_RESPONSES', True)
 RESTRICT_INTROSPECTION = getattr(settings,
                                  'RPC4DJANGO_RESTRICT_INTROSPECTION', False)
+RESTRICT_OOTB_AUTH = getattr(settings,
+                             'RPC4DJANGO_RESTRICT_OOTB_AUTH', True)
 RESTRICT_JSON = getattr(settings, 'RPC4DJANGO_RESTRICT_JSONRPC', False)
 RESTRICT_XML = getattr(settings, 'RPC4DJANGO_RESTRICT_XMLRPC', False)
 RESTRICT_METHOD_SUMMARY = getattr(settings, 
@@ -231,5 +233,5 @@ except NoReverseMatch:
     
 # instantiate the rpcdispatcher -- this examines the INSTALLED_APPS
 # for any @rpcmethod decorators and adds them to the callable methods
-dispatcher = RPCDispatcher(URL, APPS, RESTRICT_INTROSPECTION) 
+dispatcher = RPCDispatcher(URL, APPS, RESTRICT_INTROSPECTION, RESTRICT_OOTB_AUTH) 
 

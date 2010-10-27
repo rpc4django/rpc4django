@@ -47,6 +47,15 @@ functionality of RPC4Django
     convert any of the method summary docstrings to restructured text.
     Defaults to ``False``.
     
+.. envvar:: RPC4DJANGO_RESTRICT_OOTB_AUTH
+
+    If ``False``, enables out of the box authentication via the RPC methods
+    :meth:`system.login <rpc4django.rpcdispatcher.RPCDispatcher.system_login>` and
+    :meth:`system.logout <rpc4django.rpcdispatcher.RPCDispatcher.system_logout>`.
+    Out of the box authentication should NOT be considered secure
+    when used without SSL or TLS.
+    Defaults to ``True``.
+    
 .. envvar:: RPC4DJANGO_HTTP_ACCESS_CREDENTIALS
     
     If ``True``, RPC4Django will respond to OPTIONS requests with the HTTP header 

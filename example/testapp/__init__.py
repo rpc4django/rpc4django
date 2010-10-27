@@ -2,7 +2,7 @@
 
 from rpc4django import rpcmethod
 from othermodule import intro, request
-#from secretmodule import * # imports protected method
+from secretmodule import * # imports protected method
 
 @rpcmethod(name='rpc4django.mytestmethod',signature=['int', 'int', 'int', 'int'])
 def mytestmethod(a, b, c):

@@ -6,9 +6,15 @@ Changelog
 - Added cross referenced Sphinx_ based documentation
 - Fixed `bug #570852`_ which caused incompatibilities with MongoDB because
   of the name class with the variable ``is_rpcmethod``.
+- Fixed `bug #658788`_ which caused CSRF issues with 
+  :meth:`serve_rpc_request <rpc4django.views.serve_rpc_request>`.
+- Added :ref:`out of the box authentication <ootb_auth>` as per the 
+  blueprint_ on Launchpad.
 
 .. _Sphinx: http://sphinx.pocoo.org
 .. _bug #570852: https://bugs.launchpad.net/rpc4django/+bug/570852
+.. _bug #658788: https://bugs.launchpad.net/rpc4django/+bug/658788
+.. _blueprint: https://blueprints.launchpad.net/rpc4django/+spec/handle-authentication
 
 **Version 0.1.7 (19 January 2010)**
 

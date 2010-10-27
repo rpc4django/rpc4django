@@ -11,6 +11,7 @@ import pydoc
 import types
 import xmlrpclib
 from xmlrpclib import Fault
+from django.contrib.auth import authenticate, login, logout
 from jsonrpcdispatcher import JSONRPCDispatcher, json
 from xmlrpcdispatcher import XMLRPCDispatcher
 
@@ -188,6 +189,10 @@ class RPCDispatcher:
     or the 
     :class:`JSONRPCDispatcher <rpc4django.jsonrpcdispatcher.JSONRPCDispatcher>`
     
+    Disables RPC introspection methods (eg. ``system.list_methods()`` if 
+    ``restrict_introspection`` is set to ``True``. Disables out of the box
+    authentication if ``restrict_ootb_auth`` is ``True``.
+    
     **Attributes**
 
     ``url``
@@ -205,7 +210,7 @@ class RPCDispatcher:
       
     '''
     
-    def __init__(self, url='', apps=[], restrict_introspection=False):
+    def __init__(self, url='', apps=[], restrict_introspection=False, restrict_ootb_auth=True):
         version = platform.python_version_tuple()
         self.url = url
         self.rpcmethods = []        # a list of RPCMethod objects
@@ -217,6 +222,10 @@ class RPCDispatcher:
             self.register_method(self.system_methodhelp)
             self.register_method(self.system_methodsignature)
             self.register_method(self.system_describe)
+            
+        if not restrict_ootb_auth:
+            self.register_method(self.system_login)
+            self.register_method(self.system_logout)
             
         self.register_rpcmethods(apps)
         
@@ -274,6 +283,36 @@ class RPCDispatcher:
                 return method.signature
         raise Fault(APPLICATION_ERROR, 'No method found with name: ' + \
                     str(method_name))
+    
+    @rpcmethod(name='system.login', signature=['boolean', 'string', 'string'])
+    def system_login(self, username, password, **kwargs):
+        '''
+        Authorizes a user to enable sending protected RPC requests
+        '''
+        
+        request = kwargs.get('request', None)
+        user = authenticate(username=username, password=password)
+        
+        if user is not None and request is not None:
+            if user.is_active:
+                login(request, user)
+                return True
+        
+        return False
+        
+    @rpcmethod(name='system.logout', signature=['boolean'])
+    def system_logout(self, **kwargs):
+        '''
+        Deauthorizes a user
+        '''
+        
+        request = kwargs.get('request', None)
+        
+        if request is not None:
+            logout(request)
+            return True
+            
+        return False
                
     def register_rpcmethods(self, apps):
         '''
