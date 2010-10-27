@@ -92,7 +92,10 @@
 					xmlhttp.open("POST", url, false);
 					xmlhttp.setRequestHeader("Content-Type", "application/json");
 					xmlhttp.send(data);
-					alert(xmlhttp.responseText);
+					if(xmlhttp.status == 200)
+						alert(xmlhttp.responseText);
+					else
+						alert("Error status "+xmlhttp.status);
 				} else {
 					alert("Browser does not support ajax");
 				}
