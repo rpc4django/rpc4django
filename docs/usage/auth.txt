@@ -78,6 +78,7 @@ a cookie-aware transport.
 ::
 
     from xmlrpclib import ServerProxy
+    from rpc4django.utils import CookieTransport
     s = ServerProxy('https://example.com', transport=CookieTransport())
     
     s.rpc4django.secret()   # 403 Forbidden
