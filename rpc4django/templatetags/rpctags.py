@@ -10,6 +10,8 @@ from django import template
 from django.utils.safestring import mark_safe
 from django.conf import settings
 
+logger = logging.getLogger('rpc4django')
+
 RESTRICT_REST = getattr(settings, 'RPC4DJANGO_RESTRICT_REST', False)
 
 # all custom tag libraries must have this
@@ -40,7 +42,7 @@ def resttext(text):
         return text
     except Exception, ex1:
         # see Django Bug #6681
-        logging.fatal(repr(ex1))
+        logger.fatal(repr(ex1))
         return text
     
 resttext.is_safe = True

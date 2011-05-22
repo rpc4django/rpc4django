@@ -6,7 +6,7 @@ import os
 import sys
 logging.basicConfig(
     level = logging.DEBUG,
-    format = '%(asctime)s %(levelname)s %(message)s',
+    format = '%(asctime)s %(levelname)s [%(name)s] %(message)s',
 )
 
 # These are all optional and set to their default values

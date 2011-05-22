@@ -21,6 +21,8 @@ from django.core.urlresolvers import reverse, NoReverseMatch
 from rpcdispatcher import RPCDispatcher
 from __init__ import version
 
+logger = logging.getLogger('rpc4django')
+
 # these restrictions can change the functionality of rpc4django
 # but they are completely optional
 # see the rpc4django documentation for more details
@@ -69,20 +71,20 @@ def check_request_permission(request, request_format='xml'):
             # this is the method the user is calling
             # time to check the permissions
             if method.permission is not None:
-                logging.debug('Method "%s" is protected by permission "%s"' \
+                logger.debug('Method "%s" is protected by permission "%s"' \
                               %(method.name, method.permission))
                 if user is None:
                     # user is only none if not using AuthenticationMiddleware
-                    logging.warn('AuthenticationMiddleware is not enabled')
+                    logger.warn('AuthenticationMiddleware is not enabled')
                     response = False
                 elif not user.has_perm(method.permission):
                     # check the permission against the permission database
-                    logging.info('User "%s" is NOT authorized' %(str(user)))
+                    logger.info('User "%s" is NOT authorized' %(str(user)))
                     response = False
                 else:
-                    logging.debug('User "%s" is authorized' %(str(user)))
+                    logger.debug('User "%s" is authorized' %(str(user)))
             else:
-                logging.debug('Method "%s" is unprotected' %(method.name))
+                logger.debug('Method "%s" is unprotected' %(method.name))
                 
             break
     
@@ -111,8 +113,8 @@ def is_xmlrpc_request(request):
         return False
     
     if LOG_REQUESTS_RESPONSES:
-        logging.info('Unrecognized content-type "%s"' %conttype)
-        logging.info('Analyzing rpc request data to get content type')
+        logger.info('Unrecognized content-type "%s"' %conttype)
+        logger.info('Analyzing rpc request data to get content type')
     
     # analyze post data to see whether it is xml or json
     # this is slower than if the content-type was set properly
@@ -141,7 +143,7 @@ def serve_rpc_request(request):
         # Handle POST request with RPC payload
         
         if LOG_REQUESTS_RESPONSES:
-            logging.debug('Incoming request: %s' %str(request.raw_post_data))
+            logger.debug('Incoming request: %s' %str(request.raw_post_data))
             
         if is_xmlrpc_request(request):
             if RESTRICT_XML:
@@ -165,7 +167,7 @@ def serve_rpc_request(request):
             response_type = 'application/json'
             
         if LOG_REQUESTS_RESPONSES:
-            logging.debug('Outgoing %s response: %s' %(response_type, resp))
+            logger.debug('Outgoing %s response: %s' %(response_type, resp))
         
         return HttpResponse(resp, response_type)
     elif request.method == 'OPTIONS':
@@ -185,7 +187,7 @@ def serve_rpc_request(request):
                     request.META.get('HTTP_ACCESS_CONTROL_REQUEST_HEADERS', '')
                     
         if LOG_REQUESTS_RESPONSES:
-            logging.debug('Outgoing HTTP access response to: %s' %(origin))
+            logger.debug('Outgoing HTTP access response to: %s' %(origin))
                     
         return response
     else:
