@@ -1,6 +1,11 @@
 Changelog
 =========
 
+**Version 0.1.9 (2011)**
+
+- Added a CookieTransport class with a lot of help from Douglas Peter Sculley.
+- RPC4Django's logging now goes to the rpc4django logger.
+
 **Version 0.1.8 (26 October 2010)**
 
 - Added cross referenced Sphinx_ based documentation
