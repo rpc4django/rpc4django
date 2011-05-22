@@ -6,7 +6,7 @@ Prerequisites
 
 RPC4Django has been tested on Mac OS, Linux and Windows.
 
-- Python_ 2.4 - 2.6
+- Python_ 2.4 - 2.7
 - Django_ 1.0+ 
 - Docutils_ (optional)
 

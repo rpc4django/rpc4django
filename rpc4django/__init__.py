@@ -4,7 +4,7 @@ RPC4Django
 
 An XMLRPC and JSONRPC server packaged as a Django application
 
-Copyright (c) 2009 - 2010, David Fischer
+Copyright (c) 2009 - 2011, David Fischer
 
 All rights reserved.
 
@@ -37,7 +37,7 @@ from rpcdispatcher import RPCDispatcher, rpcmethod
 
 _MAJOR = 0
 _MINOR = 1
-_PATCH = 8
+_PATCH = 9
 
 __author__ = 'David Fischer'
 __author_email__ = 'rpc4django@davidfischer.name'
