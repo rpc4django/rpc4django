@@ -366,7 +366,7 @@ class RPCDispatcher:
             try:
                 params, method = xmlrpclib.loads(raw_post_data)
                 return method
-            except Fault:
+            except Exception:
                 return None
         else:
             try:
