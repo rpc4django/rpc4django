@@ -7,6 +7,10 @@ Changelog
 - RPC4Django's logging now goes to the rpc4django logger.
 - Catches an ExpatError in xmlrpclib that was previously uncaught under
   certain conditions
+- Fixed error with scanning of ``INSTALLED_APPS`` for ``@rpcmethods``. This
+  was causing an issue with South_.
+
+.. _South: http://south.aeracode.org/ticket/586
 
 **Version 0.1.8 (26 October 2010)**
 

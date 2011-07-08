@@ -322,7 +322,12 @@ class RPCDispatcher:
         
         for appname in apps:
             # check each app for any rpcmethods
-            app = __import__(appname, globals(), locals(), ['*'])
+            try:
+                app = __import__(appname, globals(), locals(), ['*'])
+            except (ImportError, ValueError):
+                # import throws ValueError on empty "name"
+                continue
+
             for obj in dir(app):
                 method = getattr(app, obj)
                 if callable(method) and \
@@ -334,10 +339,8 @@ class RPCDispatcher:
                 elif isinstance(method, types.ModuleType):
                     # if this is not a method and instead a sub-module,
                     # scan the module for methods with @rpcmethod
-                    try:
-                        self.register_rpcmethods(["%s.%s" % (appname, obj)])
-                    except ImportError:
-                        pass
+                    self.register_rpcmethods(["%s.%s" % (appname, obj)])
+                        
 
     
     def jsondispatch(self, raw_post_data, **kwargs):
