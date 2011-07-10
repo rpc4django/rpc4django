@@ -330,6 +330,8 @@ class RPCDispatcher:
 
             for obj in dir(app):
                 method = getattr(app, obj)
+                if isinstance(method, xmlrpclib.ServerProxy):
+                    continue
                 if callable(method) and \
                    hasattr(method, 'is_rpcmethod') and \
                    method.is_rpcmethod == True:

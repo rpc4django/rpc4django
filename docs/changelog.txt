@@ -1,16 +1,19 @@
 Changelog
 =========
 
-**Version 0.1.9 (9 July 2011)**
+**Version 0.1.9 (10 July 2011)**
 
 - Added a CookieTransport class with a lot of help from Douglas Peter Sculley.
 - RPC4Django's logging now goes to the rpc4django logger.
 - Catches an ExpatError in xmlrpclib that was previously uncaught under
   certain conditions
 - Fixed error with scanning of ``INSTALLED_APPS`` for ``@rpcmethods``. This
-  was causing an issue when South_ was installed.
+  was causing an issue when South_ was installed. (`#807628`_)
+- Fixed `bug #807653`_ related to scanning ServerProxy objects
 
 .. _South: http://south.aeracode.org/ticket/586
+.. _bug #807653: https://bugs.launchpad.net/rpc4django/+bug/807653
+.. _#807628: https://bugs.launchpad.net/rpc4django/+bug/807628
 
 **Version 0.1.8 (26 October 2010)**
 
