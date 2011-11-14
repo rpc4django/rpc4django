@@ -83,42 +83,42 @@ RPC4Django Documentation
 """ + open('docs/setup.txt').read()
 
 setup(
-      name = 'rpc4django',
-      version = '0.1.10',
-      description = 'Handles JSONRPC and XMLRPC requests easily with Django',
-      long_description = long_description,
-      author = 'David Fischer',
-      author_email = 'rpc4django@davidfischer.name',
-      url = 'http://www.davidfischer.name/rpc4django',
-      license = 'BSD',
-      platforms = ['OS Independent'],
-      packages = ['rpc4django', 
-                  'rpc4django.tests', 
-                  'rpc4django.tests.testmod', 
-                  'rpc4django.tests.testmod.testsubmod', 
-                  'rpc4django.templatetags',
-                 ],
-      data_files = [('rpc4django/templates/rpc4django', 
-                     ['rpc4django/templates/rpc4django/rpcmethod_summary.html'])],
-      cmdclass = cmdclasses,
-      classifiers = [
-                     'Development Status :: 4 - Beta',
-                     'Environment :: Web Environment',
-                     'Framework :: Django',
-                     'Intended Audience :: Developers',
-                     'License :: OSI Approved :: BSD License',
-                     'Operating System :: OS Independent',
-                     'Programming Language :: Python',
-                     'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
-                     'Topic :: Software Development :: Libraries :: Python Modules',
-                     
-      ],
+    name = 'rpc4django',
+    version = '0.1.10',
+    description = 'Handles JSONRPC and XMLRPC requests easily with Django',
+    long_description = long_description,
+    author = 'David Fischer',
+    author_email = 'rpc4django@davidfischer.name',
+    url = 'http://www.davidfischer.name/rpc4django',
+    license = 'BSD',
+    platforms = ['OS Independent'],
+    packages = ['rpc4django', 
+                'rpc4django.templatetags',
+               ],
+    data_files = [('rpc4django/templates/rpc4django', 
+                   ['rpc4django/templates/rpc4django/rpcmethod_summary.html'])],
+    cmdclass = cmdclasses,
+    classifiers = [
+                   'Development Status :: 4 - Beta',
+                   'Environment :: Web Environment',
+                   'Framework :: Django',
+                   'Intended Audience :: Developers',
+                   'License :: OSI Approved :: BSD License',
+                   'Operating System :: OS Independent',
+                   'Programming Language :: Python',
+                   'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
+                   'Topic :: Software Development :: Libraries :: Python Modules',
+                   
+    ],
 
-      install_requires=['Django >=1.0'],
-      
-      # templates packaged into eggs cannot be loaded unless TEMPLATE_LOADER
-      # django.template.loaders.eggs.load_template_source
-      # is specifically enabled.
-      # By setting zip_safe=False, setuptools will unpack the egg
-      zip_safe = False,
+    install_requires=['Django >=1.0'],
+    
+    # templates packaged into eggs cannot be loaded unless TEMPLATE_LOADER
+    # django.template.loaders.eggs.load_template_source
+    # is specifically enabled.
+    # By setting zip_safe=False, setuptools will unpack the egg
+    zip_safe = False,
+
+    tests_require=['Django >=1.0', 'docutils >=0.4'],
+    test_suite='tests',
 )
