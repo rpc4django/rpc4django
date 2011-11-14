@@ -13,75 +13,7 @@ try:
 except:
     from distutils.core import setup
 
-import rpc4django
-import rpc4django.tests
-
 cmdclasses = dict()
-
-loader = TestLoader()
-tests = loader.loadTestsFromModule(rpc4django.tests)
-
-class EasyCommand(Command):
-    """
-    Other commands extend this one
-    """
-
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        pass
-
-class TestCommand(EasyCommand):
-    """
-    Runs the unit tests for rpc4django
-    """
-    
-    def run(self):
-        '''
-        Runs tests from rpc4django.tests
-        '''
-
-        t = TextTestRunner()
-        t.run(tests)
-
-cmdclasses['test'] = TestCommand
-
-class CleanCommand(EasyCommand):
-    """
-    Cleans all intermediate files from the build directory
-    """
-
-    def remove(self, path):
-        """
-        Removes 'path' and prints a message if it exists
-        """
-
-        if os.path.isfile(path):
-            print 'Removing file %s' %path
-            os.remove(path)
-        elif os.path.isdir(path):
-            print 'Removing directory %s' %path
-            shutil.rmtree(path)
-
-    def run(self):
-        '''
-        Removes intermediate files
-        '''
-
-        self.remove('docs/_build/html')
-        self.remove('dist')
-        self.remove('build')
-        self.remove('rpc4django.egg-info')
-        self.remove('rpc4django.diff')
-
-cmdclasses['clean'] = CleanCommand
-
 
 ## BEGIN DJANGO CODE ##
 # This code below is directly stolen from the Django setup.py:
@@ -151,14 +83,13 @@ RPC4Django Documentation
 """ + open('docs/setup.txt').read()
 
 setup(
-      name = rpc4django.__modulename__,
-      version = rpc4django.version(),
-      description = rpc4django.__description__,
+      name = 'rpc4django',
+      version = '0.1.10',
+      description = 'Handles JSONRPC and XMLRPC requests easily with Django',
       long_description = long_description,
-      author = rpc4django.__author__,
-      author_email = rpc4django.__author_email__,
-      url = rpc4django.__url__,
-      download_url = rpc4django.__url__,
+      author = 'David Fischer',
+      author_email = 'rpc4django@davidfischer.name',
+      url = 'http://www.davidfischer.name/rpc4django',
       license = 'BSD',
       platforms = ['OS Independent'],
       packages = ['rpc4django', 
@@ -182,6 +113,8 @@ setup(
                      'Topic :: Software Development :: Libraries :: Python Modules',
                      
       ],
+
+      install_requires=['Django >=1.0'],
       
       # templates packaged into eggs cannot be loaded unless TEMPLATE_LOADER
       # django.template.loaders.eggs.load_template_source

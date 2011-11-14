@@ -1,2 +1,6 @@
 docs/_build/*
 *.db
+*.egg-info
+*.egg
+dist/
+build/

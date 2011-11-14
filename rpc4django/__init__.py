@@ -37,14 +37,8 @@ from rpcdispatcher import RPCDispatcher, rpcmethod
 
 _MAJOR = 0
 _MINOR = 1
-_PATCH = 9
+_PATCH = 10
 
-__author__ = 'David Fischer'
-__author_email__ = 'rpc4django@davidfischer.name'
-__modulename__ = 'rpc4django'
-__description__ = 'Handles JSONRPC and XMLRPC requests easily with Django'
-__url__ = 'http://www.davidfischer.name/rpc4django'
-__download_url__ = 'https://launchpad.net/rpc4django/+download'
 __version__ = str(_MAJOR) + '.' + str(_MINOR) + '.' + str(_PATCH)
 
 
