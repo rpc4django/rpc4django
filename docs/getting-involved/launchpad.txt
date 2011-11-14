@@ -4,6 +4,11 @@ Get the source code
 The source code for RPC4Django is in the Bazaar_ version controls system
 hosted by Launchpad_. It can be branched using the following command:
 
+.. note:: **Last release on Launchpad**
+
+   I will be moving RPC4Django's project hosting to Github starting with
+   the next release 0.2.0
+
 ::
 
     bzr branch lp:rpc4django
@@ -29,3 +34,4 @@ Requesting features
 Features should be requested on blueprints.launchpad.net_.
 
 .. _blueprints.launchpad.net: https://blueprints.launchpad.net/rpc4django
+
