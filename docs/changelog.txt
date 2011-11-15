@@ -5,8 +5,10 @@ Changelog
 
 - Removed requirement on Django in setup.py `#798823`_
 - Refactored to use standard setuptools tests (``python setup.py test``)
+- Moved development to Github_
 
 .. _#798823: https://bugs.launchpad.net/rpc4django/+bug/798823
+.. _Github: https://github.com/davidfischer/rpc4django
 
 **Version 0.1.9 (10 July 2011)**
 

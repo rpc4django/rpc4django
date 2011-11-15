@@ -11,7 +11,7 @@ Contents:
    overview
    setup
    usage/index
-   getting-involved/index
+   get-involved
    apidocs/index
    license
    changelog

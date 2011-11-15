@@ -44,8 +44,8 @@ source_suffix = '.txt'
 master_doc = 'index'
 
 # General information about the project.
-project = u'%s' %rpc4django.__modulename__
-copyright = u'%d, %s' %(datetime.now().year, rpc4django.__author__)
+project = u'RPC4Django'
+copyright = u'%d, the respective authors' %datetime.now().year
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

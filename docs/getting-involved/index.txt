@@ -1,9 +1,0 @@
-Getting involved
-================
-
-.. toctree::
-   
-   launchpad
-   releasing
-   testing
-   

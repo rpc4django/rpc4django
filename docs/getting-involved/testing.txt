@@ -1,9 +1,0 @@
-Unit testing
-============
-
-All unit tests can be run using ``setup.py``
-
-::
-
-    python setup.py test
-
