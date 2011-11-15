@@ -1,0 +1,30 @@
+Get Involved
+============
+
+Get involved with RPC4Django development by adding features,
+reporting bugs or adding tests.
+
+Getting the code
+----------------
+
+The code for RPC4Django is available on Github_. Formerly, the code was
+up on Launchpad_.
+
+.. _Github: https://github.com/davidfischer/rpc4django
+.. _Launchpad: https://launchpad.net/rpc4django
+
+Reporting bugs
+--------------
+
+Please report bugs in the issues section on Github. For security issues,
+please mail the authors.
+
+Testing
+-------
+
+Tests are run with the following command:
+
+::
+
+    python setup.py test
+
