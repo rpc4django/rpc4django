@@ -66,3 +66,7 @@ Configuration
         
             return a+b
             
+4. For additional information, `read the docs`_
+
+.. _read the docs: http://packages.python.org/rpc4django/
+
