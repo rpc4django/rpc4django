@@ -17,7 +17,8 @@ from xml.parsers.expat import ExpatError
 from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django.shortcuts import render_to_response
 from django.conf import settings
-from django.core.urlresolvers import reverse, NoReverseMatch
+from django.core.urlresolvers import reverse, NoReverseMatch, get_mod_func
+from django.utils.importlib import import_module
 from rpcdispatcher import RPCDispatcher
 from __init__ import version
 
@@ -234,9 +235,19 @@ try:
     URL = reverse(serve_rpc_request)
 except NoReverseMatch:
     URL = ''
-    
+
+# resolve JSON_OBJECT_SERIALIZER to function if required
+if JSON_OBJECT_SERIALIZER == None or callable(JSON_OBJECT_SERIALIZER):
+    serializer = JSON_OBJECT_SERIALIZER
+else:
+    mod_name, func_name = get_mod_func(JSON_OBJECT_SERIALIZER)
+    serializer = getattr(import_module(mod_name), func_name)
+    if not callable(serializer):
+        raise AttributeError("'%s.%s' is not a callable." %
+                (mod_name, func_name))
+
 # instantiate the rpcdispatcher -- this examines the INSTALLED_APPS
 # for any @rpcmethod decorators and adds them to the callable methods
 dispatcher = RPCDispatcher(URL, APPS, RESTRICT_INTROSPECTION,
-        RESTRICT_OOTB_AUTH, JSON_OBJECT_SERIALIZER)
+        RESTRICT_OOTB_AUTH, serializer)
 

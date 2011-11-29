@@ -72,8 +72,10 @@ functionality of RPC4Django
 
 .. envvar:: RPC4DJANGO_JSON_OBJECT_SERIALIZER
 
-    This function converts its single argument into object, which could be
-	serialized to JSON, or raises ``TypeError``. Can be used to convert
+    Function or string with path to function, which is called when JSON
+	serializer cannot convert an object to a string for transmission. It's
+	only argument is the object. Function must return its serializeble
+	representation, e.g. string. This option cauld be used to convert
 	instances of ``datetime.datetime`` into strings with required format.
 
 .. _requests with credentials: https://developer.mozilla.org/en/HTTP_access_control#Requests_with_credentials
