@@ -70,6 +70,12 @@ functionality of RPC4Django
     allowing cross site requests. See the Mozilla documentation on 
     `preflighted requests`_ for more details. Defaults to the empty string.
 
+.. envvar:: RPC4DJANGO_JSON_OBJECT_SERIALIZER
+
+    This function converts its single argument into object, which could be
+	serialized to JSON, or raises ``TypeError``. Can be used to convert
+	instances of ``datetime.datetime`` into strings with required format.
+
 .. _requests with credentials: https://developer.mozilla.org/en/HTTP_access_control#Requests_with_credentials
 .. _preflighted requests: https://developer.mozilla.org/en/HTTP_access_control#Preflighted_requests
 

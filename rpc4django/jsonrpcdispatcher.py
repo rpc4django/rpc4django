@@ -40,7 +40,8 @@ class JSONRPCDispatcher:
     or error.
     '''
     
-    def __init__(self):
+    def __init__(self, object_serializer):
+        self.object_serializer = object_serializer
         self.methods = {}
     
     def register_function(self, method, external_name):
@@ -63,7 +64,7 @@ class JSONRPCDispatcher:
             res['result'] = None
             
         try:
-            return json.dumps(res, indent=JSON_INDENT)
+            return json.dumps(res, indent=JSON_INDENT, default=self.object_serializer)
         except:
             err = {'message': 'failed to encode return value',
                    'code': JSONRPC_SERVICE_ERROR,
@@ -71,7 +72,7 @@ class JSONRPCDispatcher:
                 
             res['result'] = None
             res['error'] = err
-            return json.dumps(res, indent=JSON_INDENT)
+            return json.dumps(res, indent=JSON_INDENT, default=self.object_serializer)
     
     def dispatch(self, json_data, **kwargs):
         '''

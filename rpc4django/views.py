@@ -42,6 +42,8 @@ HTTP_ACCESS_CREDENTIALS = getattr(settings,
                                   'RPC4DJANGO_HTTP_ACCESS_CREDENTIALS', False)
 HTTP_ACCESS_ALLOW_ORIGIN = getattr(settings, 
                                   'RPC4DJANGO_HTTP_ACCESS_ALLOW_ORIGIN', '')
+JSON_OBJECT_SERIALIZER = getattr(settings, 
+                                  'RPC4DJANGO_JSON_OBJECT_SERIALIZER', None)
 
 # get a list of the installed django applications
 # these will be scanned for @rpcmethod decorators
@@ -235,5 +237,6 @@ except NoReverseMatch:
     
 # instantiate the rpcdispatcher -- this examines the INSTALLED_APPS
 # for any @rpcmethod decorators and adds them to the callable methods
-dispatcher = RPCDispatcher(URL, APPS, RESTRICT_INTROSPECTION, RESTRICT_OOTB_AUTH) 
+dispatcher = RPCDispatcher(URL, APPS, RESTRICT_INTROSPECTION,
+        RESTRICT_OOTB_AUTH, JSON_OBJECT_SERIALIZER)
 
