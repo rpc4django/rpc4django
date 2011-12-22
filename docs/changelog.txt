@@ -1,6 +1,12 @@
 Changelog
 =========
 
+**Version 0.1.11 (21 December 2011)**
+
+- Added a login_required parameter to the @rpcmethod decorator `#2`_
+
+.. _#2: https://github.com/davidfischer/rpc4django/pull/2/files?w=1
+
 **Version 0.1.10 (14 November 2011)**
 
 - Removed requirement on Django in setup.py `#798823`_

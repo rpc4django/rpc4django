@@ -44,7 +44,7 @@ In settings.py, the following changes need to be made:
 Usage
 -----
 
-To protect a method, it needs to be defined with the ``@rpcmethod`` decorator and the ``permission`` parameter.
+To protect a method, it needs to be defined with the ``@rpcmethod`` decorator and the ``permission`` or ``login_required`` parameters.
 
 ::
 
@@ -53,6 +53,10 @@ To protect a method, it needs to be defined with the ``@rpcmethod`` decorator an
     @rpcmethod(name='rpc4django.secret', signature=['string'], permission='auth.add_group')
     def secret():
         return "Successfully called a protected method"
+
+    @rpcmethod(name='rpc4django.restricted', signature=['string'], login_required=True)
+    def restricted():
+        return "Successfully called a method for logged in users only"
 
 To call an authenticated method from the Python command prompt, use the following:
 

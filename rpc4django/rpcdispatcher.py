@@ -36,6 +36,8 @@ def rpcmethod(**kwargs):
       (eg. struct, int, array, etc. - see the XMLRPC spec for details).
     ``permission``
       the Django permission required to execute this method
+    ``login_required``
+      the method requires a user to be logged in
 
     **Examples**
 
@@ -44,6 +46,7 @@ def rpcmethod(**kwargs):
         @rpcmethod()
         @rpcmethod(name='myns.myFuncName', signature=['int','int'])
         @rpcmethod(permission='add_group')
+        @rpcmethod(login_required=True)
 
     '''
 
@@ -86,6 +89,8 @@ class RPCMethod:
       See :meth:`rpc4django.rpcdispatcher.rpcmethod`
     ``permission``
       Any Django permissions required to call this method
+    ``login_required``
+      The method can only be called by a logged in user
 
     '''
 

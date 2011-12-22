@@ -39,6 +39,7 @@ Demo Sites
 Contributors
 ------------
 - `David Fischer`_ (`wish list`_)
+- Alessandro Pasotti
 
 .. _David Fischer: mailto:rpc4django@davidfischer.name
 .. _wish list: http://amzn.com/w/1Z1GLQYQPFBT1
