@@ -20,6 +20,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse, NoReverseMatch, get_mod_func
 from django.utils.importlib import import_module
 from rpcdispatcher import RPCDispatcher
+from jsonrpcdispatcher import json
 from __init__ import version
 
 logger = logging.getLogger('rpc4django')
@@ -242,6 +243,11 @@ if isinstance(JSON_ENCODER, basestring):
     json_encoder = getattr(import_module(mod_name), cls_name)
 else:
     json_encoder = JSON_ENCODER
+
+
+if not issubclass(json_encoder, json.JSONEncoder):
+    raise Exception("RPC4DJANGO_JSON_ENCODER must be derived from "
+                    "rpc4django.jsonrpcdispatcher.JSONEncoder")
 
 # instantiate the rpcdispatcher -- this examines the INSTALLED_APPS
 # for any @rpcmethod decorators and adds them to the callable methods
