@@ -43,8 +43,8 @@ HTTP_ACCESS_CREDENTIALS = getattr(settings,
                                   'RPC4DJANGO_HTTP_ACCESS_CREDENTIALS', False)
 HTTP_ACCESS_ALLOW_ORIGIN = getattr(settings, 
                                   'RPC4DJANGO_HTTP_ACCESS_ALLOW_ORIGIN', '')
-JSON_OBJECT_SERIALIZER = getattr(settings, 
-                                  'RPC4DJANGO_JSON_OBJECT_SERIALIZER', None)
+JSON_ENCODER = getattr(settings, 'RPC4DJANGO_JSON_ENCODER',
+                       'django.core.serializers.json.DjangoJSONEncoder')
 
 # get a list of the installed django applications
 # these will be scanned for @rpcmethod decorators
@@ -236,18 +236,15 @@ try:
 except NoReverseMatch:
     URL = ''
 
-# resolve JSON_OBJECT_SERIALIZER to function if required
-if JSON_OBJECT_SERIALIZER == None or callable(JSON_OBJECT_SERIALIZER):
-    serializer = JSON_OBJECT_SERIALIZER
+# resolve JSON_ENCODER to class if it's a string
+if isinstance(JSON_ENCODER, basestring):
+    mod_name, cls_name = get_mod_func(JSON_ENCODER)
+    json_encoder = getattr(import_module(mod_name), cls_name)
 else:
-    mod_name, func_name = get_mod_func(JSON_OBJECT_SERIALIZER)
-    serializer = getattr(import_module(mod_name), func_name)
-    if not callable(serializer):
-        raise AttributeError("'%s.%s' is not a callable." %
-                (mod_name, func_name))
+    json_encoder = JSON_ENCODER
 
 # instantiate the rpcdispatcher -- this examines the INSTALLED_APPS
 # for any @rpcmethod decorators and adds them to the callable methods
 dispatcher = RPCDispatcher(URL, APPS, RESTRICT_INTROSPECTION,
-        RESTRICT_OOTB_AUTH, serializer)
+        RESTRICT_OOTB_AUTH, json_encoder)
 

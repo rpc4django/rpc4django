@@ -211,11 +211,11 @@ class RPCDispatcher:
     '''
     
     def __init__(self, url='', apps=[], restrict_introspection=False,
-            restrict_ootb_auth=True, json_object_serializer=None):
+            restrict_ootb_auth=True, json_encoder=None):
         version = platform.python_version_tuple()
         self.url = url
         self.rpcmethods = []        # a list of RPCMethod objects
-        self.jsonrpcdispatcher = JSONRPCDispatcher(json_object_serializer)
+        self.jsonrpcdispatcher = JSONRPCDispatcher(json_encoder)
         self.xmlrpcdispatcher = XMLRPCDispatcher()
             
         if not restrict_introspection:

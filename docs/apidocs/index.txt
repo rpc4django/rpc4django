@@ -70,13 +70,12 @@ functionality of RPC4Django
     allowing cross site requests. See the Mozilla documentation on 
     `preflighted requests`_ for more details. Defaults to the empty string.
 
-.. envvar:: RPC4DJANGO_JSON_OBJECT_SERIALIZER
+.. envvar:: RPC4DJANGO_JSON_ENCODER
 
-    Function or string with path to function, which is called when JSON
-	serializer cannot convert an object to a string for transmission. It's
-	only argument is the object. Function must return its serializeble
-	representation, e.g. string. This option cauld be used to convert
-	instances of ``datetime.datetime`` into strings with required format.
+    Subclass of ``rpc4django.jsonrpcdispatcher.json.JSONEncoder`` or string
+	pointing to the subclass. It can be used to serialize objects that can't
+	otherwise be serialized. Defaults to
+	``django.core.serializers.json.DjangoJSONEncoder``.
 
 .. _requests with credentials: https://developer.mozilla.org/en/HTTP_access_control#Requests_with_credentials
 .. _preflighted requests: https://developer.mozilla.org/en/HTTP_access_control#Preflighted_requests
