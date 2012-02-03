@@ -1,6 +1,12 @@
 Changelog
 =========
 
+**Version 0.1.12 (02 February 2012)**
+
+- JSON encoding is customizable `#3`_ (thanks to Alexander Morozov)
+
+.. _#3: https://github.com/davidfischer/rpc4django/pull/3/files
+
 **Version 0.1.11 (21 December 2011)**
 
 - Added a login_required parameter to the @rpcmethod decorator `#2`_
