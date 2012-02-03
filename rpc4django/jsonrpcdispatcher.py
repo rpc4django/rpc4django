@@ -40,7 +40,8 @@ class JSONRPCDispatcher:
     or error.
     '''
     
-    def __init__(self):
+    def __init__(self, json_encoder=None):
+        self.json_encoder = json_encoder
         self.methods = {}
     
     def register_function(self, method, external_name):
@@ -61,9 +62,8 @@ class JSONRPCDispatcher:
             res['error'] = error
             res['error']['name'] = 'JSONRPCError'
             res['result'] = None
-            
         try:
-            return json.dumps(res, indent=JSON_INDENT)
+            return json.dumps(res, indent=JSON_INDENT, cls=self.json_encoder)
         except:
             err = {'message': 'failed to encode return value',
                    'code': JSONRPC_SERVICE_ERROR,
@@ -71,7 +71,7 @@ class JSONRPCDispatcher:
                 
             res['result'] = None
             res['error'] = err
-            return json.dumps(res, indent=JSON_INDENT)
+            return json.dumps(res, indent=JSON_INDENT, cls=self.json_encoder)
     
     def dispatch(self, json_data, **kwargs):
         '''

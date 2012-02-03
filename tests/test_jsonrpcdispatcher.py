@@ -7,6 +7,7 @@ JSON RPC Dispatcher Tests
 '''
 
 import unittest
+from datetime import datetime
 from rpc4django.jsonrpcdispatcher import *
 
 class TestJSONRPCDispatcher(unittest.TestCase):
@@ -34,6 +35,27 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         self.dispatcher.register_function(factorial, 'fact')
         self.dispatcher.register_function(unicode_ret, 'unicode_ret')
         self.dispatcher.register_function(kwargstest, 'kwargstest')
+        self.dispatcher.register_function(lambda: datetime.now(), 'datetest')
+
+    def test_dates(self):
+        jsontxt = json.dumps({"method": "datetest", "id": 1, "params": []})
+        resp = self.dispatcher.dispatch(jsontxt)
+        jsondict = json.loads(resp)
+        self.assertTrue(jsondict['error'] is not None)
+
+        class MyEncoder(json.JSONEncoder):
+            def default(self, o):
+                if isinstance(o, datetime):
+                    return o.strftime("%Y-%m-%d %H:%M:%S")
+                else:
+                    return super(MyEncoder, self).default(o)
+        dispatcher = JSONRPCDispatcher(MyEncoder)
+        dispatcher.register_function(lambda: datetime.now(), 'datetest')
+        resp = dispatcher.dispatch(jsontxt)
+        jsondict = json.loads(resp)
+        self.assertTrue(jsondict['error'] is None)
+        self.assertEqual(type(jsondict['result']), unicode)
+        self.assertEqual(type(datetime.strptime(jsondict['result'], "%Y-%m-%d %H:%M:%S")), datetime)
 
     def test_kwargs(self):
         d = dict()
@@ -140,6 +162,6 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         self.assertTrue(isinstance(jsondict['error'], dict))
         self.assertEqual(jsondict['error'] ['code'], 102)
         self.assertEqual(jsondict['error'] ['message'], 'method must be a javascript String')
-        
+
 if __name__ == '__main__':
     unittest.main()

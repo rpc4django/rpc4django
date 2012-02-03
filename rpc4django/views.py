@@ -17,8 +17,10 @@ from xml.parsers.expat import ExpatError
 from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django.shortcuts import render_to_response
 from django.conf import settings
-from django.core.urlresolvers import reverse, NoReverseMatch
+from django.core.urlresolvers import reverse, NoReverseMatch, get_mod_func
+from django.utils.importlib import import_module
 from rpcdispatcher import RPCDispatcher
+from jsonrpcdispatcher import json
 from __init__ import version
 
 logger = logging.getLogger('rpc4django')
@@ -42,6 +44,8 @@ HTTP_ACCESS_CREDENTIALS = getattr(settings,
                                   'RPC4DJANGO_HTTP_ACCESS_CREDENTIALS', False)
 HTTP_ACCESS_ALLOW_ORIGIN = getattr(settings,
                                   'RPC4DJANGO_HTTP_ACCESS_ALLOW_ORIGIN', '')
+JSON_ENCODER = getattr(settings, 'RPC4DJANGO_JSON_ENCODER',
+                       'django.core.serializers.json.DjangoJSONEncoder')
 
 # get a list of the installed django applications
 # these will be scanned for @rpcmethod decorators
@@ -245,7 +249,20 @@ try:
 except NoReverseMatch:
     URL = ''
 
+# resolve JSON_ENCODER to class if it's a string
+if isinstance(JSON_ENCODER, basestring):
+    mod_name, cls_name = get_mod_func(JSON_ENCODER)
+    json_encoder = getattr(import_module(mod_name), cls_name)
+else:
+    json_encoder = JSON_ENCODER
+
+
+if not issubclass(json_encoder, json.JSONEncoder):
+    raise Exception("RPC4DJANGO_JSON_ENCODER must be derived from "
+                    "rpc4django.jsonrpcdispatcher.JSONEncoder")
+
 # instantiate the rpcdispatcher -- this examines the INSTALLED_APPS
 # for any @rpcmethod decorators and adds them to the callable methods
-dispatcher = RPCDispatcher(URL, APPS, RESTRICT_INTROSPECTION, RESTRICT_OOTB_AUTH)
+dispatcher = RPCDispatcher(URL, APPS, RESTRICT_INTROSPECTION,
+        RESTRICT_OOTB_AUTH, json_encoder)
 
