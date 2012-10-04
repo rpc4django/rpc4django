@@ -28,11 +28,10 @@ Features
 .. _reST: http://docutils.sourceforge.net/rst.html
 .. _authentication and authorization: http://docs.djangoproject.com/en/dev/topics/auth
 
-Demo Sites
-----------
+Demo Site
+---------
 
-- http://rpc4django.davidfischer.name
-- https://rpcauth.davidfischer.name (user = pass = rpc4django, self signed certificate)
+- http://rpc4django-demo.herokuapp.com/
 
 .. _contributors:
 

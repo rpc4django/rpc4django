@@ -1,6 +1,10 @@
 Changelog
 =========
 
+**Version 0.2.0 (not released)**
+
+- The demo site is now on Heroku
+
 **Version 0.1.12 (02 February 2012)**
 
 - JSON encoding is customizable `#3`_ (thanks to Alexander Morozov)
