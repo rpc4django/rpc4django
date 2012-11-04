@@ -1,7 +1,7 @@
 Changelog
 =========
 
-**Version 0.2.0 (not released)**
+**Version 0.2.0 (04 November 2012)**
 
 - The demo site is now on Heroku
 - ``params`` is now optional in JSONRPC requests (thanks to Albert Hopkins)
