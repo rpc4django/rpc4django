@@ -4,7 +4,9 @@ Changelog
 **Version 0.2.0 (not released)**
 
 - The demo site is now on Heroku
-- ``params`` is now optional in JSONRPC requests
+- ``params`` is now optional in JSONRPC requests (thanks to Albert Hopkins)
+- Switching supported versions to Django supported versions (deprecating Django < 1.3 support)
+- Moved documentation to readthedocs.org
 
 **Version 0.1.12 (02 February 2012)**
 

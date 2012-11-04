@@ -80,33 +80,3 @@ functionality of RPC4Django
 .. _requests with credentials: https://developer.mozilla.org/en/HTTP_access_control#Requests_with_credentials
 .. _preflighted requests: https://developer.mozilla.org/en/HTTP_access_control#Preflighted_requests
 
-Views
------------------
-
-.. automodule:: rpc4django.views
-   :members:
-   
-RPC dispatcher
------------------   
-   
-.. automodule:: rpc4django.rpcdispatcher
-   :members:
-
-XMLRPC dispatcher
------------------   
-   
-.. automodule:: rpc4django.xmlrpcdispatcher
-   :members:
-   
-JSONRPC dispatcher
--------------------
-   
-.. automodule:: rpc4django.jsonrpcdispatcher
-   :members:
-
-Template tags
------------------
-   
-.. automodule:: rpc4django.templatetags.rpctags
-   :members:
-   
