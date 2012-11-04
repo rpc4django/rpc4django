@@ -70,5 +70,5 @@ Configuration
             
 4. For additional information, `read the docs`_
 
-.. _read the docs: http://packages.python.org/rpc4django/
+.. _read the docs: https://rpc4django.readthedocs.org
 
