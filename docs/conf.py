@@ -15,11 +15,6 @@ import os
 import sys
 from datetime import datetime
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '../..'))
-import rpc4django
-os.environ['DJANGO_SETTINGS_MODULE'] = 'example.settings'
-
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -52,7 +47,7 @@ copyright = u'%d, the respective authors' %datetime.now().year
 # built documents.
 #
 # The short X.Y version.
-version = rpc4django.version()
+version = '0.2.0'
 # The full version, including alpha/beta/rc tags.
 release = version
 

@@ -36,8 +36,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 from rpcdispatcher import RPCDispatcher, rpcmethod
 
 _MAJOR = 0
-_MINOR = 1
-_PATCH = 12
+_MINOR = 2
+_PATCH = 0
 
 __version__ = str(_MAJOR) + '.' + str(_MINOR) + '.' + str(_PATCH)
 

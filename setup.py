@@ -84,7 +84,7 @@ RPC4Django Documentation
 
 setup(
     name = 'rpc4django',
-    version = '0.1.12',
+    version = '0.2.0',
     description = 'Handles JSONRPC and XMLRPC requests easily with Django',
     long_description = long_description,
     author = 'David Fischer',
@@ -111,7 +111,7 @@ setup(
                    
     ],
 
-    install_requires=['Django >=1.0'],
+    install_requires=['Django >=1.3'],
     
     # templates packaged into eggs cannot be loaded unless TEMPLATE_LOADER
     # django.template.loaders.eggs.load_template_source
@@ -119,6 +119,6 @@ setup(
     # By setting zip_safe=False, setuptools will unpack the egg
     zip_safe = False,
 
-    tests_require=['Django >=1.0', 'docutils >=0.4'],
+    tests_require=['Django >=1.3', 'docutils >=0.4'],
     test_suite='tests',
 )
