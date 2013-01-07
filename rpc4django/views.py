@@ -225,8 +225,10 @@ def serve_rpc_request(request):
             # restricts the ability to test the rpc server from the docs
             'restrict_rpctest': RESTRICT_RPCTEST,
         }
-        return render_to_response('rpc4django/rpcmethod_summary.html', \
-                                  template_data)
+        from django.template import RequestContext
+        return render_to_response('rpc4django/rpcmethod_summary.html',
+                                  template_data,
+                                  context_instance=RequestContext(request))
 
 # exclude from the CSRF framework because RPC is intended to be used cross site
 try:
