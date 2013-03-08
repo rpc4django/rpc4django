@@ -4,7 +4,7 @@ RPC4Django
 
 An XMLRPC and JSONRPC server packaged as a Django application
 
-Copyright (c) 2009 - 2012, David Fischer
+Copyright (c) 2009 - 2013, David Fischer
 
 All rights reserved.
 
