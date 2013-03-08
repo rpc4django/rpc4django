@@ -89,7 +89,7 @@ setup(
     long_description = long_description,
     author = 'David Fischer',
     author_email = 'rpc4django@davidfischer.name',
-    url = 'http://www.davidfischer.name/rpc4django',
+    url = 'https://github.com/davidfischer/rpc4django',
     license = 'BSD',
     platforms = ['OS Independent'],
     packages = ['rpc4django', 
