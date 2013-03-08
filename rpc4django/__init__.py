@@ -2,7 +2,7 @@ from rpcdispatcher import RPCDispatcher, rpcmethod
 
 _MAJOR = 0
 _MINOR = 2
-_PATCH = 0
+_PATCH = 1
 
 __version__ = str(_MAJOR) + '.' + str(_MINOR) + '.' + str(_PATCH)
 

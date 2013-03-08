@@ -1,6 +1,11 @@
 Changelog
 =========
 
+**Version 0.2.1 (08 March 2013)**
+
+- Body length check fix for Django 1.5
+
+
 **Version 0.2.0 (04 November 2012)**
 
 - The demo site is now on Heroku
