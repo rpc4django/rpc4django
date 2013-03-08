@@ -155,7 +155,7 @@ def serve_rpc_request(request):
 
     '''
 
-    if request.method == "POST" and len(request.POST) > 0:
+    if request.method == "POST" and request.META.get('CONTENT_LENGTH', 0) > 0:
         # Handle POST request with RPC payload
 
         if LOG_REQUESTS_RESPONSES:
