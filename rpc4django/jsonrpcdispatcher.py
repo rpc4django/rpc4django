@@ -53,7 +53,7 @@ class JSONRPCDispatcher:
         self.methods[external_name] = method
 
     def _encode_result(self, jsonid, result, error):
-        res = {'id': jsonid}
+        res = {'jsonrpc': '2.0', 'id': jsonid}
 
         if error is None:
             res['error'] = None
