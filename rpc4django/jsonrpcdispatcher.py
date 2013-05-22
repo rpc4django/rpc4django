@@ -22,7 +22,7 @@ JSONRPC_SERVICE_ERROR = 104
 JSONRPC_PROCEDURE_NOT_FOUND_ERROR = 105
 
 
-class JSONRPCDispatcher:
+class JSONRPCDispatcher(object):
     '''
     This class can be used encode and decode jsonrpc messages, dispatch
     the requested method with the passed parameters, and return any response
@@ -133,5 +133,3 @@ class JSONRPCDispatcher:
                     {'message': 'method "' + jsondict['method'] + \
                      '" is not supported',
                      'code': JSONRPC_PROCEDURE_NOT_FOUND_ERROR})
-
-

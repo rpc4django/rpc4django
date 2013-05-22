@@ -1,5 +1,6 @@
-import httplib 
+import httplib
 import xmlrpclib
+
 
 class CookieTransport(xmlrpclib.SafeTransport):
     """
@@ -25,12 +26,12 @@ class CookieTransport(xmlrpclib.SafeTransport):
         self.send_host(h, host)
         self.send_user_agent(h)
 
-        if self.cookie is not None: 
+        if self.cookie is not None:
             h.putheader("Cookie", self.cookie)
 
         self.send_content(h, request_body)
         errcode, errmsg, headers = h.getreply()
-        
+
         self.cookie = headers.getheader('set-cookie') or self.cookie
 
         if errcode != 200:
@@ -44,4 +45,3 @@ class CookieTransport(xmlrpclib.SafeTransport):
         self.verbose = False
 
         return self.parse_response(h.getfile())
-

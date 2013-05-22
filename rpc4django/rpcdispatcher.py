@@ -19,6 +19,7 @@ from xmlrpcdispatcher import XMLRPCDispatcher
 # http://xmlrpc-epi.sourceforge.net/specs/rfc.fault_codes.php
 APPLICATION_ERROR = -32500
 
+
 def rpcmethod(**kwargs):
     '''
     Accepts keyword based arguments that describe the method's rpc aspects
@@ -72,7 +73,8 @@ def rpcmethod(**kwargs):
         return method
     return set_rpcmethod_info
 
-class RPCMethod:
+
+class RPCMethod(object):
     '''
     A method available to be called via the rpc dispatcher
 
@@ -194,7 +196,7 @@ class RPCMethod:
         return []
 
 
-class RPCDispatcher:
+class RPCDispatcher(object):
     '''
     Keeps track of the methods available to be called and then
     dispatches method calls to either the
@@ -222,7 +224,7 @@ class RPCDispatcher:
       where JSONRPC calls are dispatched to using :meth:`jsondispatch`
 
     '''
-    
+
     def __init__(self, url='', apps=[], restrict_introspection=False,
             restrict_ootb_auth=True, json_encoder=None):
         version = platform.python_version_tuple()
@@ -432,4 +434,3 @@ class RPCDispatcher:
             self.xmlrpcdispatcher.register_function(method, meth.name)
             self.jsonrpcdispatcher.register_function(method, meth.name)
             self.rpcmethods.append(meth)
-

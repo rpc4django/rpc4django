@@ -12,6 +12,7 @@ The main entry point for RPC4Django. Usually, the user simply puts
 '''
 
 import logging
+import json
 from xml.dom.minidom import parseString
 from xml.parsers.expat import ExpatError
 from django.http import HttpResponse, Http404, HttpResponseForbidden
@@ -21,7 +22,6 @@ from django.core.urlresolvers import reverse, NoReverseMatch, get_mod_func
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.importlib import import_module
 from rpcdispatcher import RPCDispatcher
-from jsonrpcdispatcher import json
 from __init__ import version
 
 logger = logging.getLogger('rpc4django')
@@ -251,4 +251,3 @@ else:
 # for any @rpcmethod decorators and adds them to the callable methods
 dispatcher = RPCDispatcher(URL, APPS, RESTRICT_INTROSPECTION,
         RESTRICT_OOTB_AUTH, json_encoder)
-
