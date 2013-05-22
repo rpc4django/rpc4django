@@ -259,10 +259,6 @@ else:
     json_encoder = JSON_ENCODER
 
 
-if not issubclass(json_encoder, json.JSONEncoder):
-    raise Exception("RPC4DJANGO_JSON_ENCODER must be derived from "
-                    "rpc4django.jsonrpcdispatcher.JSONEncoder")
-
 # instantiate the rpcdispatcher -- this examines the INSTALLED_APPS
 # for any @rpcmethod decorators and adds them to the callable methods
 dispatcher = RPCDispatcher(URL, APPS, RESTRICT_INTROSPECTION,
