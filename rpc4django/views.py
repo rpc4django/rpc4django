@@ -18,6 +18,7 @@ from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django.shortcuts import render_to_response
 from django.conf import settings
 from django.core.urlresolvers import reverse, NoReverseMatch, get_mod_func
+from django.views.decorators.csrf import csrf_exempt
 from django.utils.importlib import import_module
 from rpcdispatcher import RPCDispatcher
 from jsonrpcdispatcher import json
@@ -142,6 +143,7 @@ def is_xmlrpc_request(request):
 
     return False
 
+@csrf_exempt
 def serve_rpc_request(request):
     '''
     Handles rpc calls based on the content type of the request or
@@ -230,20 +232,6 @@ def serve_rpc_request(request):
                                   template_data,
                                   context_instance=RequestContext(request))
 
-# exclude from the CSRF framework because RPC is intended to be used cross site
-try:
-    # Django 1.2
-    from django.views.decorators.csrf import csrf_exempt
-except ImportError:
-    try:
-        # Django 1.1
-        from django.contrib.csrf.middleware import csrf_exempt
-    except ImportError:
-        # Django 1.0
-        csrf_exempt = None
-
-if csrf_exempt is not None:
-    serve_rpc_request = csrf_exempt(serve_rpc_request)
 
 # reverse the method for use with system.describe and ajax
 try:

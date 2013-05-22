@@ -4,7 +4,6 @@ This module implements a JSON 1.0 compatible dispatcher
 see http://json-rpc.org/wiki/specification
 '''
 
-from types import StringTypes
 import json
 
 
@@ -101,7 +100,7 @@ class JSONRPCDispatcher:
                      "'method' attribute.",
                      'code': JSONRPC_BAD_CALL_ERROR})
 
-        if not isinstance(jsondict['method'], StringTypes):
+        if not isinstance(jsondict['method'], basestring):
             return self._encode_result(jsondict.get('id', ''), None,
                     {'message': 'method must be a javascript String',
                      'code': JSONRPC_BAD_CALL_ERROR})
