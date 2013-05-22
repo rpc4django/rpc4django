@@ -5,18 +5,8 @@ see http://json-rpc.org/wiki/specification
 '''
 
 from types import StringTypes
+import json
 
-# attempt to import json from 3 sources:
-# 1. try to import it from django
-# 2. if this is not run through django, try to import the simplejson module
-# 3. import the json module that is only present in python >= 2.6
-try:
-    from django.utils import simplejson as json
-except ImportError:
-    try:
-        import simplejson as json
-    except ImportError:
-        import json
 
 # indent the json output by this many characters
 # 0 does newlines only and None does most compact
