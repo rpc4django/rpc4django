@@ -3,9 +3,15 @@ Implements an XMLRPC dispatcher
 """
 
 import sys
-import xmlrpclib
-from xmlrpclib import Fault
-from SimpleXMLRPCServer import SimpleXMLRPCDispatcher
+
+try:
+    # Python2
+    from xmlrpclib import Fault, loads, dumps
+    from SimpleXMLRPCServer import SimpleXMLRPCDispatcher
+except ImportError:
+    # Python3
+    from xmlrpc.client import Fault, loads, dumps
+    from xmlrpc.server import SimpleXMLRPCDispatcher
 
 
 class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
@@ -36,7 +42,7 @@ class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
         """
 
         try:
-            params, method = xmlrpclib.loads(data)
+            params, method = loads(data)
 
             try:
                 response = self._dispatch(method, params, **kwargs)
@@ -46,17 +52,17 @@ class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
 
             # wrap response in a singleton tuple
             response = (response,)
-            response = xmlrpclib.dumps(response, methodresponse=1,
-                                       allow_none=self.allow_none, 
-                                       encoding=self.encoding)
-        except Fault, fault:
-            response = xmlrpclib.dumps(fault, allow_none=self.allow_none,
+            response = dumps(response, methodresponse=1,
+                             allow_none=self.allow_none,
+                             encoding=self.encoding)
+        except Fault as fault:
+            response = dumps(fault, allow_none=self.allow_none,
                                        encoding=self.encoding)
         except:
             # report exception back to server
             exc_type, exc_value, exc_tb = sys.exc_info()
-            response = xmlrpclib.dumps(
-                xmlrpclib.Fault(1, "%s:%s" % (exc_type, exc_value)),
+            response = dumps(
+                Fault(1, "%s:%s" % (exc_type, exc_value)),
                 encoding=self.encoding, allow_none=self.allow_none,
                 )
 

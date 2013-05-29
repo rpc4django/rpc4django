@@ -1,8 +1,14 @@
 import httplib
-import xmlrpclib
+
+try:
+    # Python2
+    from xmlrpclib import SafeTransport
+except ImportError:
+    # Python3
+    from xmlrpc.client import SafeTransport
 
 
-class CookieTransport(xmlrpclib.SafeTransport):
+class CookieTransport(SafeTransport):
     """
     Overides request add cookies from previous request.
     """

@@ -10,6 +10,14 @@ import unittest
 from datetime import datetime
 from rpc4django.jsonrpcdispatcher import *
 
+try:
+    # Python2
+    basestring
+except NameError:
+    # Python3
+    basestring = str
+
+
 class TestJSONRPCDispatcher(unittest.TestCase):
 
     def setUp(self):
@@ -54,7 +62,7 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         resp = dispatcher.dispatch(jsontxt)
         jsondict = json.loads(resp)
         self.assertTrue(jsondict['error'] is None)
-        self.assertEqual(type(jsondict['result']), unicode)
+        self.assertTrue(isinstance(jsondict['result'], basestring))
         self.assertEqual(type(datetime.strptime(jsondict['result'], "%Y-%m-%d %H:%M:%S")), datetime)
 
     def test_jsonrpc_member(self):
@@ -174,6 +182,7 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         self.assertTrue(isinstance(jsondict['error'], dict))
         self.assertEqual(jsondict['error'] ['code'], 102)
         self.assertEqual(jsondict['error'] ['message'], 'method must be a javascript String')
+
 
 if __name__ == '__main__':
     unittest.main()

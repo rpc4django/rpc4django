@@ -21,6 +21,13 @@ JSONRPC_SEQUENCE_ERROR = 103
 JSONRPC_SERVICE_ERROR = 104
 JSONRPC_PROCEDURE_NOT_FOUND_ERROR = 105
 
+try:
+    # Python2
+    basestring
+except NameError:
+    # Python3
+    basestring = str
+
 
 class JSONRPCDispatcher(object):
     '''
@@ -120,7 +127,7 @@ class JSONRPCDispatcher(object):
                     # Catch unexpected keyword argument error
                     result = self.methods[jsondict.get('method')] \
                                          (*jsondict.get('params', []))
-            except Exception, e:
+            except Exception as e:
                 # this catches any error from the called method raising
                 # an exception to the wrong number of params being sent
                 # to the method.

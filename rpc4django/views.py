@@ -239,6 +239,13 @@ try:
 except NoReverseMatch:
     URL = ''
 
+try:
+    # Python2
+    basestring
+except NameError:
+    # Python3
+    basestring = str
+
 # resolve JSON_ENCODER to class if it's a string
 if isinstance(JSON_ENCODER, basestring):
     mod_name, cls_name = get_mod_func(JSON_ENCODER)

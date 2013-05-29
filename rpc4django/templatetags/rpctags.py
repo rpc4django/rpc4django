@@ -40,7 +40,7 @@ def resttext(text):
         return mark_safe(parts['fragment'])
     except ImportError:
         return text
-    except Exception, ex1:
+    except Exception as ex1:
         # see Django Bug #6681
         logger.fatal(repr(ex1))
         return text

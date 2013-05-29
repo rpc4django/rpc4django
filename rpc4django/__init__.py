@@ -1,4 +1,4 @@
-from rpcdispatcher import RPCDispatcher, rpcmethod
+from .rpcdispatcher import RPCDispatcher, rpcmethod
 
 _MAJOR = 0
 _MINOR = 2

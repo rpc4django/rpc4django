@@ -9,11 +9,16 @@ import inspect
 import platform
 import pydoc
 import types
-import xmlrpclib
-from xmlrpclib import Fault
 from django.contrib.auth import authenticate, login, logout
-from jsonrpcdispatcher import JSONRPCDispatcher, json
-from xmlrpcdispatcher import XMLRPCDispatcher
+from .jsonrpcdispatcher import JSONRPCDispatcher, json
+from .xmlrpcdispatcher import XMLRPCDispatcher
+
+try:
+    # Python2.x
+    from xmlrpclib import Fault, loads, ServerProxy
+except ImportError:
+    # Python3
+    from xmlrpc.client import Fault, loads, ServerProxy
 
 # this error code is taken from xmlrpc-epi
 # http://xmlrpc-epi.sourceforge.net/specs/rfc.fault_codes.php
@@ -113,7 +118,12 @@ class RPCMethod(object):
         elif name is not None:
             self.name = name
         else:
-            self.name = method.func_name
+            try:
+                # Python2
+                self.name = method.func_name
+            except AttributeError:
+                # Python3
+                self.name = method.__name__
 
         # get the help string for each method
         if docstring is not None:
@@ -346,7 +356,7 @@ class RPCDispatcher(object):
 
             for obj in dir(app):
                 method = getattr(app, obj)
-                if isinstance(method, xmlrpclib.ServerProxy):
+                if isinstance(method, ServerProxy):
                     continue
                 if callable(method) and \
                    hasattr(method, 'is_rpcmethod') and \
@@ -385,7 +395,7 @@ class RPCDispatcher(object):
             # xmlrpclib.loads could throw an exception, but this is fine
             # since _marshaled_dispatch would throw the same thing
             try:
-                params, method = xmlrpclib.loads(raw_post_data)
+                params, method = loads(raw_post_data)
                 return method
             except Exception:
                 return None
