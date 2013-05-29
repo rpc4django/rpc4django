@@ -1,4 +1,4 @@
-from .rpcdispatcher import RPCDispatcher, rpcmethod
+from .rpcdispatcher import RPCDispatcher, rpcmethod   # noqa
 
 _MAJOR = 0
 _MINOR = 2

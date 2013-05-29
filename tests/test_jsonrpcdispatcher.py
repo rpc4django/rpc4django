@@ -6,9 +6,10 @@ JSON RPC Dispatcher Tests
 
 '''
 
+import json
 import unittest
 from datetime import datetime
-from rpc4django.jsonrpcdispatcher import *
+from rpc4django.jsonrpcdispatcher import JSONRPCDispatcher
 
 try:
     # Python2
@@ -21,12 +22,12 @@ except NameError:
 class TestJSONRPCDispatcher(unittest.TestCase):
 
     def setUp(self):
-        def add(a,b):
-            return a+b
+        def add(a, b):
+            return a + b
 
         def factorial(num):
             if num > 1:
-                return num * factorial(num-1)
+                return num * factorial(num - 1)
             else:
                 return 1
 
@@ -68,7 +69,7 @@ class TestJSONRPCDispatcher(unittest.TestCase):
     def test_jsonrpc_member(self):
         # Demonstrate that the jsondict contains "jsonrpc"
         d = dict()
-        d['params'] = [1,2]
+        d['params'] = [1, 2]
         d['method'] = 'kwargstest'
         d['id'] = 1
 
@@ -79,7 +80,7 @@ class TestJSONRPCDispatcher(unittest.TestCase):
 
     def test_kwargs(self):
         d = dict()
-        d['params'] = [1,2]
+        d['params'] = [1, 2]
         d['method'] = 'kwargstest'
         d['id'] = 1
 
@@ -143,8 +144,8 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         self.assertTrue(jsondict['result'] is None)
         self.assertEqual(jsondict['id'], 123)
         self.assertTrue(isinstance(jsondict['error'], dict))
-        self.assertEqual(jsondict['error'] ['code'], 105)
-        self.assertEqual(jsondict['error'] ['message'], 'method "add123" is not supported')
+        self.assertEqual(jsondict['error']['code'], 105)
+        self.assertEqual(jsondict['error']['message'], 'method "add123" is not supported')
 
     def test_dispatch_badrequest(self):
         jsontxt = '"params":asdf[14]","method":"add","id":0}'
@@ -153,8 +154,8 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         self.assertTrue(jsondict['result'] is None)
         self.assertEqual(jsondict['id'], '')
         self.assertTrue(isinstance(jsondict['error'], dict))
-        self.assertEqual(jsondict['error'] ['code'], 101)
-        self.assertEqual(jsondict['error'] ['message'], 'JSON decoding error')
+        self.assertEqual(jsondict['error']['code'], 101)
+        self.assertEqual(jsondict['error']['message'], 'JSON decoding error')
 
         jsontxt = '["should", "be", "a", "Object"]'
         resp = self.dispatcher.dispatch(jsontxt)
@@ -162,8 +163,8 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         self.assertTrue(jsondict['result'] is None)
         self.assertEqual(jsondict['id'], '')
         self.assertTrue(isinstance(jsondict['error'], dict))
-        self.assertEqual(jsondict['error'] ['code'], 102)
-        self.assertEqual(jsondict['error'] ['message'], 'Cannot decode to a javascript Object')
+        self.assertEqual(jsondict['error']['code'], 102)
+        self.assertEqual(jsondict['error']['message'], 'Cannot decode to a javascript Object')
 
         jsontxt = '{"params":"shouldbelist","method":"add","id":0}'
         resp = self.dispatcher.dispatch(jsontxt)
@@ -171,8 +172,8 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         self.assertTrue(jsondict['result'] is None)
         self.assertEqual(jsondict['id'], 0)
         self.assertTrue(isinstance(jsondict['error'], dict))
-        self.assertEqual(jsondict['error'] ['code'], 102)
-        self.assertEqual(jsondict['error'] ['message'], 'params must be a javascript Array')
+        self.assertEqual(jsondict['error']['code'], 102)
+        self.assertEqual(jsondict['error']['message'], 'params must be a javascript Array')
 
         jsontxt = '{"params":"[]","method":123,"id":42}'
         resp = self.dispatcher.dispatch(jsontxt)
@@ -180,8 +181,8 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         self.assertTrue(jsondict['result'] is None)
         self.assertEqual(jsondict['id'], 42)
         self.assertTrue(isinstance(jsondict['error'], dict))
-        self.assertEqual(jsondict['error'] ['code'], 102)
-        self.assertEqual(jsondict['error'] ['message'], 'method must be a javascript String')
+        self.assertEqual(jsondict['error']['code'], 102)
+        self.assertEqual(jsondict['error']['message'], 'method must be a javascript String')
 
 
 if __name__ == '__main__':

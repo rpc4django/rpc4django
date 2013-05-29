@@ -12,7 +12,6 @@ The main entry point for RPC4Django. Usually, the user simply puts
 '''
 
 import logging
-import json
 from xml.dom.minidom import parseString
 from xml.parsers.expat import ExpatError
 from django.http import HttpResponse, Http404, HttpResponseForbidden
@@ -44,13 +43,14 @@ RESTRICT_RPCTEST = getattr(settings, 'RPC4DJANGO_RESTRICT_RPCTEST', False)
 HTTP_ACCESS_CREDENTIALS = getattr(settings,
                                   'RPC4DJANGO_HTTP_ACCESS_CREDENTIALS', False)
 HTTP_ACCESS_ALLOW_ORIGIN = getattr(settings,
-                                  'RPC4DJANGO_HTTP_ACCESS_ALLOW_ORIGIN', '')
+                                   'RPC4DJANGO_HTTP_ACCESS_ALLOW_ORIGIN', '')
 JSON_ENCODER = getattr(settings, 'RPC4DJANGO_JSON_ENCODER',
                        'django.core.serializers.json.DjangoJSONEncoder')
 
 # get a list of the installed django applications
 # these will be scanned for @rpcmethod decorators
 APPS = getattr(settings, 'INSTALLED_APPS', [])
+
 
 def check_request_permission(request, request_format='xml'):
     '''
@@ -67,7 +67,7 @@ def check_request_permission(request, request_format='xml'):
 
     user = getattr(request, 'user', None)
     methods = dispatcher.list_methods()
-    method_name = dispatcher.get_method_name(request.raw_post_data, \
+    method_name = dispatcher.get_method_name(request.raw_post_data,
                                              request_format)
     response = True
 
@@ -76,36 +76,38 @@ def check_request_permission(request, request_format='xml'):
             # this is the method the user is calling
             # time to check the permissions
             if method.permission is not None:
-                logger.debug('Method "%s" is protected by permission "%s"' \
-                              %(method.name, method.permission))
+                logger.debug('Method "%s" is protected by permission "%s"'
+                             % (method.name, method.permission))
                 if user is None:
                     # user is only none if not using AuthenticationMiddleware
                     logger.warn('AuthenticationMiddleware is not enabled')
                     response = False
                 elif not user.has_perm(method.permission):
                     # check the permission against the permission database
-                    logger.info('User "%s" is NOT authorized' %(str(user)))
+                    logger.info('User "%s" is NOT authorized' % (str(user)))
                     response = False
                 else:
-                    logger.debug('User "%s" is authorized' %(str(user)))
+                    logger.debug('User "%s" is authorized' % (str(user)))
             elif method.login_required:
-                logger.debug('Method "%s" is protected by login_required'% method.name)
+                logger.debug('Method "%s" is protected by login_required'
+                             % method.name)
                 if user is None:
                     # user is only none if not using AuthenticationMiddleware
                     logger.warn('AuthenticationMiddleware is not enabled')
                     response = False
                 elif user.is_anonymous():
                     # ensure the user is logged in
-                    logger.info('User "%s" is NOT authorized' %(str(user)))
+                    logger.info('User "%s" is NOT authorized' % (str(user)))
                     response = False
                 else:
-                    logger.debug('User "%s" is authorized' %(str(user)))
+                    logger.debug('User "%s" is authorized' % (str(user)))
             else:
-                logger.debug('Method "%s" is unprotected' %(method.name))
+                logger.debug('Method "%s" is unprotected' % (method.name))
 
             break
 
     return response
+
 
 def is_xmlrpc_request(request):
     '''
@@ -130,7 +132,7 @@ def is_xmlrpc_request(request):
         return False
 
     if LOG_REQUESTS_RESPONSES:
-        logger.info('Unrecognized content-type "%s"' %conttype)
+        logger.info('Unrecognized content-type "%s"' % conttype)
         logger.info('Analyzing rpc request data to get content type')
 
     # analyze post data to see whether it is xml or json
@@ -142,6 +144,7 @@ def is_xmlrpc_request(request):
         pass
 
     return False
+
 
 @csrf_exempt
 def serve_rpc_request(request):
@@ -161,7 +164,7 @@ def serve_rpc_request(request):
         # Handle POST request with RPC payload
 
         if LOG_REQUESTS_RESPONSES:
-            logger.debug('Incoming request: %s' %str(request.raw_post_data))
+            logger.debug('Incoming request: %s' % str(request.raw_post_data))
 
         if is_xmlrpc_request(request):
             if RESTRICT_XML:
@@ -170,7 +173,7 @@ def serve_rpc_request(request):
             if not check_request_permission(request, 'xml'):
                 return HttpResponseForbidden()
 
-            resp = dispatcher.xmldispatch(request.raw_post_data, \
+            resp = dispatcher.xmldispatch(request.raw_post_data,
                                           request=request)
             response_type = 'text/xml'
         else:
@@ -180,12 +183,12 @@ def serve_rpc_request(request):
             if not check_request_permission(request, 'json'):
                 return HttpResponseForbidden()
 
-            resp = dispatcher.jsondispatch(request.raw_post_data, \
+            resp = dispatcher.jsondispatch(request.raw_post_data,
                                            request=request)
             response_type = 'application/json'
 
         if LOG_REQUESTS_RESPONSES:
-            logger.debug('Outgoing %s response: %s' %(response_type, resp))
+            logger.debug('Outgoing %s response: %s' % (response_type, resp))
 
         return HttpResponse(resp, response_type)
     elif request.method == 'OPTIONS':
@@ -198,14 +201,14 @@ def serve_rpc_request(request):
         response['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
         response['Access-Control-Max-Age'] = 0
         response['Access-Control-Allow-Credentials'] = \
-                        str(HTTP_ACCESS_CREDENTIALS).lower()
-        response['Access-Control-Allow-Origin']= HTTP_ACCESS_ALLOW_ORIGIN
+            str(HTTP_ACCESS_CREDENTIALS).lower()
+        response['Access-Control-Allow-Origin'] = HTTP_ACCESS_ALLOW_ORIGIN
 
         response['Access-Control-Allow-Headers'] = \
-                    request.META.get('HTTP_ACCESS_CONTROL_REQUEST_HEADERS', '')
+            request.META.get('HTTP_ACCESS_CONTROL_REQUEST_HEADERS', '')
 
         if LOG_REQUESTS_RESPONSES:
-            logger.debug('Outgoing HTTP access response to: %s' %(origin))
+            logger.debug('Outgoing HTTP access response to: %s' % (origin))
 
         return response
     else:
@@ -257,4 +260,4 @@ else:
 # instantiate the rpcdispatcher -- this examines the INSTALLED_APPS
 # for any @rpcmethod decorators and adds them to the callable methods
 dispatcher = RPCDispatcher(URL, APPS, RESTRICT_INTROSPECTION,
-        RESTRICT_OOTB_AUTH, json_encoder)
+                           RESTRICT_OOTB_AUTH, json_encoder)

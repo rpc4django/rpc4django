@@ -6,7 +6,6 @@ It also contains a decorator to mark methods as rpc methods.
 '''
 
 import inspect
-import platform
 import pydoc
 import types
 from django.contrib.auth import authenticate, login, logout
@@ -144,7 +143,7 @@ class RPCMethod(object):
         self.signature.insert(0, 'object')
 
         if hasattr(method, 'signature') and \
-             len(method.signature) == len(self.args) + 1:
+           len(method.signature) == len(self.args) + 1:
             # use the @rpcmethod signature if it has the correct
             # number of args
             self.signature = method.signature
@@ -164,13 +163,13 @@ class RPCMethod(object):
         plist = ['"' + param['name'] + '"' for param in params]
 
         jsonlist = [
-                   '{',
-                   '"id": "djangorpc",',
-                   '"method": "' + self.name + '",',
-                   '"params": [',
-                   '   ' + ','.join(plist),
-                   ']',
-                   '}',
+            '{',
+            '"id": "djangorpc",',
+            '"method": "' + self.name + '",',
+            '"params": [',
+            '   ' + ','.join(plist),
+            ']',
+            '}',
         ]
 
         return '\n'.join(jsonlist)
@@ -194,13 +193,13 @@ class RPCMethod(object):
             arglist = []
             if len(self.signature) == len(self.args) + 1:
                 for argnum in range(len(self.args)):
-                    arglist.append({'name': self.args[argnum], \
-                                    'rpctype': self.signature[argnum+1]})
+                    arglist.append({'name': self.args[argnum],
+                                    'rpctype': self.signature[argnum + 1]})
                 return arglist
             else:
                 # this should not happen under normal usage
                 for argnum in range(len(self.args)):
-                    arglist.append({'name': self.args[argnum], \
+                    arglist.append({'name': self.args[argnum],
                                     'rpctype': 'object'})
                 return arglist
         return []
@@ -236,8 +235,7 @@ class RPCDispatcher(object):
     '''
 
     def __init__(self, url='', apps=[], restrict_introspection=False,
-            restrict_ootb_auth=True, json_encoder=None):
-        version = platform.python_version_tuple()
+                 restrict_ootb_auth=True, json_encoder=None):
         self.url = url
         self.rpcmethods = []        # a list of RPCMethod objects
         self.jsonrpcdispatcher = JSONRPCDispatcher(json_encoder)
@@ -267,7 +265,7 @@ class RPCDispatcher(object):
         description['methods'] = [{'name': method.name,
                                    'summary': method.help,
                                    'params': method.get_params(),
-                                   'return': method.get_returnvalue()} \
+                                   'return': method.get_returnvalue()}
                                   for method in self.rpcmethods]
 
         return description
@@ -295,7 +293,7 @@ class RPCDispatcher(object):
         # this differs from what implementation in SimpleXMLRPCServer does
         # this will report via a fault or error while SimpleXMLRPCServer
         # just returns an empty string
-        raise Fault(APPLICATION_ERROR, 'No method found with name: ' + \
+        raise Fault(APPLICATION_ERROR, 'No method found with name: ' +
                     str(method_name))
 
     @rpcmethod(name='system.methodSignature', signature=['array', 'string'])
@@ -307,7 +305,7 @@ class RPCDispatcher(object):
         for method in self.rpcmethods:
             if method.name == method_name:
                 return method.signature
-        raise Fault(APPLICATION_ERROR, 'No method found with name: ' + \
+        raise Fault(APPLICATION_ERROR, 'No method found with name: ' +
                     str(method_name))
 
     @rpcmethod(name='system.login', signature=['boolean', 'string', 'string'])
@@ -360,7 +358,7 @@ class RPCDispatcher(object):
                     continue
                 if callable(method) and \
                    hasattr(method, 'is_rpcmethod') and \
-                   method.is_rpcmethod == True:
+                   method.is_rpcmethod is True:
                     # if this method is callable and it has the rpcmethod
                     # decorator, add it to the dispatcher
                     self.register_method(method, method.external_name)
@@ -368,8 +366,6 @@ class RPCDispatcher(object):
                     # if this is not a method and instead a sub-module,
                     # scan the module for methods with @rpcmethod
                     self.register_rpcmethods(["%s.%s" % (appname, obj)])
-
-
 
     def jsondispatch(self, raw_post_data, **kwargs):
         '''

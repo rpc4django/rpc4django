@@ -7,10 +7,10 @@ RPC Dispatcher Tests
 '''
 
 import base64
+import json
 import unittest
 from xml.dom.minidom import parseString
-from rpc4django.rpcdispatcher import *
-from rpc4django.jsonrpcdispatcher import *
+from rpc4django.rpcdispatcher import rpcmethod, RPCMethod, RPCDispatcher
 
 try:
     from xmlrpclib import Fault, Binary
@@ -24,8 +24,8 @@ BINARY_STRING = b'\x97\xd2\xab\xc8\xfc\x98\xad'
 class TestRPCMethod(unittest.TestCase):
     def setUp(self):
         @rpcmethod(name='my.add', signature=['int', 'int', 'int'])
-        def add(a,b):
-            return a+b
+        def add(a, b):
+            return a + b
         self.add = RPCMethod(add)
 
         @rpcmethod()
@@ -54,8 +54,9 @@ class TestRPCMethod(unittest.TestCase):
 class TestRPCDispatcher(unittest.TestCase):
     def setUp(self):
         self.d = RPCDispatcher()
-        def add(a,b):
-            return a+b
+
+        def add(a, b):
+            return a + b
 
         self.add = add
 
@@ -72,13 +73,13 @@ class TestRPCDispatcher(unittest.TestCase):
 
     def test_rpcfault(self):
         try:
-            resp = self.d.system_methodhelp('method.DoesNotExist.AtAll')
+            self.d.system_methodhelp('method.DoesNotExist.AtAll')
             self.fail('method not exists fault expected!')
         except Fault:
             pass
 
         try:
-            resp = self.d.system_methodsignature('method.DoesNotExist.AtAll')
+            self.d.system_methodsignature('method.DoesNotExist.AtAll')
             self.fail('method not exists fault expected!')
         except Fault:
             pass
@@ -106,13 +107,13 @@ class TestRPCDispatcher(unittest.TestCase):
         xml = '<?xml version="1.0"?><methodCall><methodName>system.listMethods</methodName><params></params></methodCall>'
         expresp = "<?xml version='1.0'?><methodResponse><params><param><value><array><data><value><string>system.describe</string></value><value><string>system.listMethods</string></value><value><string>system.methodHelp</string></value><value><string>system.methodSignature</string></value></data></array></value></param></params></methodResponse>"
         resp = self.d.xmldispatch(xml)
-        self.assertEqual(resp.replace('\n',''), expresp)
+        self.assertEqual(resp.replace('\n', ''), expresp)
 
     def test_unicode_call(self):
         self.d.register_method(self.add)
         s1 = u'は'
         s2 = u'じめまして'
-        xml = u'<?xml version="1.0"?><methodCall><methodName>add</methodName><params><param><value><string>%s</string></value></param><param><value><string>%s</string></value></param></params></methodCall>' %(s1, s2)
+        xml = u'<?xml version="1.0"?><methodCall><methodName>add</methodName><params><param><value><string>%s</string></value></param><param><value><string>%s</string></value></param></params></methodCall>' % (s1, s2)
         resp = self.d.xmldispatch(xml.encode('utf-8'))
         dom = parseString(resp)
         retval = dom.getElementsByTagName('string')[0].firstChild.data

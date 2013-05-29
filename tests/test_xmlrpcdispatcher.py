@@ -5,7 +5,7 @@ XML RPC Dispatcher Tests
 '''
 
 import unittest
-from rpc4django.xmlrpcdispatcher import *
+from rpc4django.xmlrpcdispatcher import XMLRPCDispatcher
 
 try:
     from xmlrpclib import loads, dumps
@@ -25,7 +25,7 @@ class TestXMLRPCDispatcher(unittest.TestCase):
         self.dispatcher.register_function(kwargstest, 'kwargstest')
 
     def test_kwargs(self):
-        xml = dumps((1,2), 'kwargstest')
+        xml = dumps((1, 2), 'kwargstest')
         ret = self.dispatcher.dispatch(xml)
         out, name = loads(ret)
         self.assertFalse(out[0])

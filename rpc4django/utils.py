@@ -2,10 +2,10 @@ import httplib
 
 try:
     # Python2
-    from xmlrpclib import SafeTransport
+    from xmlrpclib import SafeTransport, Transport, ProtocolError
 except ImportError:
     # Python3
-    from xmlrpc.client import SafeTransport
+    from xmlrpc.client import SafeTransport, Transport, ProtocolError
 
 
 class CookieTransport(SafeTransport):
@@ -14,7 +14,7 @@ class CookieTransport(SafeTransport):
     """
 
     def __init__(self):
-        xmlrpclib.Transport.__init__(self)
+        Transport.__init__(self)
         self.cookie = None
 
     def make_connection(self, host):
@@ -41,11 +41,11 @@ class CookieTransport(SafeTransport):
         self.cookie = headers.getheader('set-cookie') or self.cookie
 
         if errcode != 200:
-            raise xmlrpclib.ProtocolError(
+            raise ProtocolError(
                 host + handler,
                 errcode, errmsg,
                 headers
-                )
+            )
 
         # do not print the response body
         self.verbose = False

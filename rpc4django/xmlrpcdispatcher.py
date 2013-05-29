@@ -29,7 +29,6 @@ class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
         self.allow_none = True
         self.encoding = None
 
-
     def dispatch(self, data, **kwargs):
         """
         Extracts the xml marshaled parameters and method name and calls the
@@ -57,14 +56,14 @@ class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
                              encoding=self.encoding)
         except Fault as fault:
             response = dumps(fault, allow_none=self.allow_none,
-                                       encoding=self.encoding)
+                             encoding=self.encoding)
         except:
             # report exception back to server
             exc_type, exc_value, exc_tb = sys.exc_info()
             response = dumps(
                 Fault(1, "%s:%s" % (exc_type, exc_value)),
                 encoding=self.encoding, allow_none=self.allow_none,
-                )
+            )
 
         return response
 

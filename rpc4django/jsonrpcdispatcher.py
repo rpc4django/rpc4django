@@ -89,54 +89,49 @@ class JSONRPCDispatcher(object):
             # attempt to do a json decode on the data
             jsondict = json.loads(json_data)
         except ValueError:
-            return self._encode_result('', None,
-                    {'message': 'JSON decoding error',
-                     'code': JSONRPC_PARSE_ERROR})
+            return self._encode_result('', None, {
+                'message': 'JSON decoding error',
+                'code': JSONRPC_PARSE_ERROR})
 
         if not isinstance(jsondict, dict):
             # verify the json data was a javascript Object which gets decoded
             # into a python dictionary
-            return self._encode_result('', None,
-                    {'message': 'Cannot decode to a javascript Object',
-                     'code': JSONRPC_BAD_CALL_ERROR})
+            return self._encode_result('', None, {
+                'message': 'Cannot decode to a javascript Object',
+                'code': JSONRPC_BAD_CALL_ERROR})
 
         if not 'method' in jsondict:
             # verify the dictionary contains the method key
-            return self._encode_result(jsondict.get('id', ''), None,
-                    {'message': "JSONRPC requests must have the "+ \
-                     "'method' attribute.",
-                     'code': JSONRPC_BAD_CALL_ERROR})
+            return self._encode_result(jsondict.get('id', ''), None, {
+                'message': "JSONRPC requests must have the 'method' attribute.",
+                'code': JSONRPC_BAD_CALL_ERROR})
 
         if not isinstance(jsondict['method'], basestring):
-            return self._encode_result(jsondict.get('id', ''), None,
-                    {'message': 'method must be a javascript String',
-                     'code': JSONRPC_BAD_CALL_ERROR})
+            return self._encode_result(jsondict.get('id', ''), None, {
+                'message': 'method must be a javascript String',
+                'code': JSONRPC_BAD_CALL_ERROR})
 
         if 'params' in jsondict and not isinstance(jsondict['params'], list):
-            return self._encode_result(jsondict.get('id', ''), None,
-                    {'message': 'params must be a javascript Array',
-                      'code': JSONRPC_BAD_CALL_ERROR})
-
+            return self._encode_result(jsondict.get('id', ''), None, {
+                'message': 'params must be a javascript Array',
+                'code': JSONRPC_BAD_CALL_ERROR})
 
         if jsondict['method'] in self.methods:
             try:
                 try:
-                    result = self.methods[jsondict.get('method')] \
-                                    (*jsondict.get('params', []), **kwargs)
+                    result = self.methods[jsondict.get('method')](*jsondict.get('params', []), **kwargs)
                 except TypeError:
                     # Catch unexpected keyword argument error
-                    result = self.methods[jsondict.get('method')] \
-                                         (*jsondict.get('params', []))
+                    result = self.methods[jsondict.get('method')](*jsondict.get('params', []))
             except Exception as e:
                 # this catches any error from the called method raising
                 # an exception to the wrong number of params being sent
                 # to the method.
-                return self._encode_result(jsondict.get('id', ''), None,
-                            {'message': repr(e),
-                             'code': JSONRPC_SERVICE_ERROR})
+                return self._encode_result(jsondict.get('id', ''), None, {
+                    'message': repr(e),
+                    'code': JSONRPC_SERVICE_ERROR})
             return self._encode_result(jsondict.get('id', ''), result, None)
         else:
-            return self._encode_result(jsondict.get('id', ''), None,
-                    {'message': 'method "' + jsondict['method'] + \
-                     '" is not supported',
-                     'code': JSONRPC_PROCEDURE_NOT_FOUND_ERROR})
+            return self._encode_result(jsondict.get('id', ''), None, {
+                'message': 'method "%s" is not supported' % jsondict['method'],
+                'code': JSONRPC_PROCEDURE_NOT_FOUND_ERROR})
