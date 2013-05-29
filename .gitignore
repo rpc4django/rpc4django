@@ -1,8 +1,45 @@
-*.pyc
-docs/_build/*
-*.db
-*.egg-info
+*.py[cod]
+
+# C extensions
+*.so
+
+# Packages
 *.egg
-dist/
-build/
-venv
+*.egg-info
+dist
+build
+eggs
+parts
+bin
+var
+sdist
+develop-eggs
+.installed.cfg
+lib
+lib64
+__pycache__
+
+# Installer logs
+pip-log.txt
+
+# Unit test / coverage reports
+.coverage
+.tox
+nosetests.xml
+
+# Virtualenvs
+venv*
+
+# Databases
+*.db
+
+# Sphinx
+docs/_build/*
+
+# Translations
+*.mo
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
