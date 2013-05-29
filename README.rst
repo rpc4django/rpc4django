@@ -7,7 +7,7 @@ RPC4Django
 Prerequisites
 -------------
 
-- Python_ 2.6 - 3.3
+- Python_ 2.6, 2.7, 3.3
 - Django_ 1.3+
 - Docutils_ (optional)
 
