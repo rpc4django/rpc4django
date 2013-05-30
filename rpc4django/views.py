@@ -20,8 +20,8 @@ from django.conf import settings
 from django.core.urlresolvers import reverse, NoReverseMatch, get_mod_func
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.importlib import import_module
-from rpcdispatcher import RPCDispatcher
-from __init__ import version
+from .rpcdispatcher import RPCDispatcher
+from .__init__ import version
 
 logger = logging.getLogger('rpc4django')
 
@@ -160,7 +160,7 @@ def serve_rpc_request(request):
 
     '''
 
-    if request.method == "POST" and request.META.get('CONTENT_LENGTH', 0) > 0:
+    if request.method == "POST" and int(request.META.get('CONTENT_LENGTH', 0)) > 0:
         # Handle POST request with RPC payload
 
         if LOG_REQUESTS_RESPONSES:

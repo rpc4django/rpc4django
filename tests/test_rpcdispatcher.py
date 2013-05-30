@@ -106,7 +106,7 @@ class TestRPCDispatcher(unittest.TestCase):
     def test_xmlrpc_call(self):
         xml = '<?xml version="1.0"?><methodCall><methodName>system.listMethods</methodName><params></params></methodCall>'
         expresp = "<?xml version='1.0'?><methodResponse><params><param><value><array><data><value><string>system.describe</string></value><value><string>system.listMethods</string></value><value><string>system.methodHelp</string></value><value><string>system.methodSignature</string></value></data></array></value></param></params></methodResponse>"
-        resp = self.d.xmldispatch(xml)
+        resp = self.d.xmldispatch(xml.encode('utf-8'))
         self.assertEqual(resp.replace('\n', ''), expresp)
 
     def test_unicode_call(self):
@@ -123,14 +123,14 @@ class TestRPCDispatcher(unittest.TestCase):
         self.d.register_method(self.testBin)
 
         xml = '<?xml version="1.0"?><methodCall><methodName>testBin</methodName><params></params></methodCall>'
-        resp = self.d.xmldispatch(xml)
+        resp = self.d.xmldispatch(xml.encode('utf-8'))
         dom = parseString(resp)
         retval = dom.getElementsByTagName('base64')[0].firstChild.data
         self.assertEqual(base64.b64decode(retval), BINARY_STRING)
 
     def test_jsonrpc_call(self):
         jsontxt = '{"params":[],"method":"system.listMethods","id":1}'
-        resp = self.d.jsondispatch(jsontxt)
+        resp = self.d.jsondispatch(jsontxt.encode('utf-8'))
         jsondict = json.loads(resp)
         self.assertTrue(jsondict['error'] is None)
         self.assertEqual(jsondict['id'], 1)
@@ -140,7 +140,7 @@ class TestRPCDispatcher(unittest.TestCase):
         self.d.register_method(self.add)
 
         jsontxt = '{"params":[1,2],"method":"add","id":1}'
-        resp = self.d.jsondispatch(jsontxt)
+        resp = self.d.jsondispatch(jsontxt.encode('utf-8'))
         jsondict = json.loads(resp)
         self.assertTrue(jsondict['error'] is None)
         self.assertEqual(jsondict['id'], 1)
@@ -150,11 +150,11 @@ class TestRPCDispatcher(unittest.TestCase):
         self.d.register_method(self.kwargstest)
 
         jsontxt = '{"params":[1,2],"method":"kwargstest","id":1}'
-        resp = self.d.jsondispatch(jsontxt)
+        resp = self.d.jsondispatch(jsontxt.encode('utf-8'))
         jsondict = json.loads(resp)
         self.assertFalse(jsondict['result'])
 
-        resp = self.d.jsondispatch(jsontxt, c=1)
+        resp = self.d.jsondispatch(jsontxt.encode('utf-8'), c=1)
         jsondict = json.loads(resp)
         self.assertTrue(jsondict['result'])
 

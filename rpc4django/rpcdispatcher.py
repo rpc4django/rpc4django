@@ -372,7 +372,7 @@ class RPCDispatcher(object):
         Sends the post data to :meth:`rpc4django.jsonrpcdispatcher.JSONRPCDispatcher.dispatch`
         '''
 
-        return self.jsonrpcdispatcher.dispatch(raw_post_data, **kwargs)
+        return self.jsonrpcdispatcher.dispatch(raw_post_data.decode('utf-8'), **kwargs)
 
     def xmldispatch(self, raw_post_data, **kwargs):
         '''
@@ -391,14 +391,14 @@ class RPCDispatcher(object):
             # xmlrpclib.loads could throw an exception, but this is fine
             # since _marshaled_dispatch would throw the same thing
             try:
-                params, method = loads(raw_post_data)
+                params, method = loads(raw_post_data.decode('utf-8'))
                 return method
             except Exception:
                 return None
         else:
             try:
                 # attempt to do a json decode on the data
-                jsondict = json.loads(raw_post_data)
+                jsondict = json.loads(raw_post_data.decode('utf-8'))
                 if not isinstance(jsondict, dict) or 'method' not in jsondict:
                     return None
                 else:
