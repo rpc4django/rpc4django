@@ -12,8 +12,7 @@ The main entry point for RPC4Django. Usually, the user simply puts
 '''
 
 import logging
-from xml.dom.minidom import parseString
-from xml.parsers.expat import ExpatError
+import json
 from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django.shortcuts import render_to_response
 from django.conf import settings
@@ -137,13 +136,12 @@ def is_xmlrpc_request(request):
 
     # analyze post data to see whether it is xml or json
     # this is slower than if the content-type was set properly
+    # checking JSON is safer than XML because of entity expansion
     try:
-        parseString(request.raw_post_data)
+        json.loads(request.raw_post_data)
+        return False
+    except ValueError:
         return True
-    except ExpatError:
-        pass
-
-    return False
 
 
 @csrf_exempt
