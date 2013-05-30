@@ -28,3 +28,13 @@ Tests are run with the following command:
 
     python setup.py test
 
+Code quality
+------------
+
+RPC4Django uses flake8_ to verify code quality:
+
+::
+
+    flake8 --ignore=E501,W391 rpc4django
+
+.. _flake8: https://bitbucket.org/tarek/flake8
