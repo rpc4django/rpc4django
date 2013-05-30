@@ -1,4 +1,4 @@
 recursive-include rpc4django/templates/rpc4django *.html
 recursive-include example *.py
 recursive-include docs *.txt
-include *.txt
+include *.rst
