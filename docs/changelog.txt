@@ -1,6 +1,15 @@
 Changelog
 =========
 
+**Version 0.2.3 (30 May 2013)**
+
+- Python3 compatibility!
+- Code cleanup and code quality (flake8!)
+- **[security]** Fixed billion laughs denial of service issue (`#20`_)
+
+.. _#20: https://github.com/davidfischer/rpc4django/issues/20
+
+
 **Version 0.2.2 (22 May 2013)**
 
 - Fixed error involving simplejson with Django 1.5 (`#14`_)
