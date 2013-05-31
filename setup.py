@@ -31,10 +31,11 @@ setup(
         'rpc4django',
         'rpc4django.templatetags',
     ],
-    data_files=[
-        ('rpc4django/templates/rpc4django',
-            ['rpc4django/templates/rpc4django/rpcmethod_summary.html'])
-    ],
+    package_data={
+        'rpc4django': [
+            'templates/rpc4django/rpcmethod_summary.html',
+        ]
+    },
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
