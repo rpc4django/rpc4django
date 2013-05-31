@@ -1,6 +1,11 @@
 Changelog
 =========
 
+**Version 0.2.4 (30 May 2013)**
+
+- Fixed a packaging issue with 0.2.3
+
+
 **Version 0.2.3 (30 May 2013)**
 
 - Python3 compatibility!
