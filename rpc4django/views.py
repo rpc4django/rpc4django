@@ -51,6 +51,12 @@ JSON_ENCODER = getattr(settings, 'RPC4DJANGO_JSON_ENCODER',
 APPS = getattr(settings, 'INSTALLED_APPS', [])
 
 
+def get_request_body(request):
+    if hasattr(request, 'raw_post_data'):
+        return request.raw_post_data
+    return request.body
+
+
 def check_request_permission(request, request_format='xml'):
     '''
     Checks whether this user has permission to call a particular method
@@ -66,7 +72,7 @@ def check_request_permission(request, request_format='xml'):
 
     user = getattr(request, 'user', None)
     methods = dispatcher.list_methods()
-    method_name = dispatcher.get_method_name(request.raw_post_data,
+    method_name = dispatcher.get_method_name(get_request_body(request),
                                              request_format)
     response = True
 
@@ -138,7 +144,7 @@ def is_xmlrpc_request(request):
     # this is slower than if the content-type was set properly
     # checking JSON is safer than XML because of entity expansion
     try:
-        json.loads(request.raw_post_data)
+        json.loads(get_request_body(request))
         return False
     except ValueError:
         return True
@@ -162,7 +168,7 @@ def serve_rpc_request(request):
         # Handle POST request with RPC payload
 
         if LOG_REQUESTS_RESPONSES:
-            logger.debug('Incoming request: %s' % str(request.raw_post_data))
+            logger.debug('Incoming request: %s' % str(get_request_body(request)))
 
         if is_xmlrpc_request(request):
             if RESTRICT_XML:
@@ -171,7 +177,7 @@ def serve_rpc_request(request):
             if not check_request_permission(request, 'xml'):
                 return HttpResponseForbidden()
 
-            resp = dispatcher.xmldispatch(request.raw_post_data,
+            resp = dispatcher.xmldispatch(get_request_body(request),
                                           request=request)
             response_type = 'text/xml'
         else:
@@ -181,7 +187,7 @@ def serve_rpc_request(request):
             if not check_request_permission(request, 'json'):
                 return HttpResponseForbidden()
 
-            resp = dispatcher.jsondispatch(request.raw_post_data,
+            resp = dispatcher.jsondispatch(get_request_body(request),
                                            request=request)
             response_type = 'application/json'
 
