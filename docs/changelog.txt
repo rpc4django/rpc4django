@@ -1,6 +1,13 @@
 Changelog
 =========
 
+**Version 0.2.5 (09 December 2013)**
+
+- Django 1.6 compatibility (`#29`_)
+
+.. _#29: https://github.com/davidfischer/rpc4django/pull/29
+
+
 **Version 0.2.4 (30 May 2013)**
 
 - Fixed a packaging issue with 0.2.3
