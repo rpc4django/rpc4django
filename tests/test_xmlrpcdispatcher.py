@@ -5,7 +5,16 @@ XML RPC Dispatcher Tests
 '''
 
 import unittest
-from rpc4django.xmlrpcdispatcher import XMLRPCDispatcher
+from django.core.exceptions import ImproperlyConfigured
+
+
+try:
+    from rpc4django.xmlrpcdispatcher import XMLRPCDispatcher
+except ImproperlyConfigured:
+    # Configure Django settings if not already configured
+    from django.conf import settings
+    settings.configure(DEBUG=True)
+    from rpc4django.xmlrpcdispatcher import XMLRPCDispatcher
 
 try:
     from xmlrpclib import loads, dumps

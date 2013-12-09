@@ -10,7 +10,16 @@ import base64
 import json
 import unittest
 from xml.dom.minidom import parseString
-from rpc4django.rpcdispatcher import rpcmethod, RPCMethod, RPCDispatcher
+from django.core.exceptions import ImproperlyConfigured
+
+
+try:
+    from rpc4django.rpcdispatcher import rpcmethod, RPCMethod, RPCDispatcher
+except ImproperlyConfigured:
+    # Configure Django if not already configured
+    from django.conf import settings
+    settings.configure(DEBUG=True)
+    from rpc4django.rpcdispatcher import rpcmethod, RPCMethod, RPCDispatcher
 
 try:
     from xmlrpclib import Fault, Binary

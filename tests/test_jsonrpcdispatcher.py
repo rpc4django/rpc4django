@@ -9,7 +9,16 @@ JSON RPC Dispatcher Tests
 import json
 import unittest
 from datetime import datetime
-from rpc4django.jsonrpcdispatcher import JSONRPCDispatcher
+from django.core.exceptions import ImproperlyConfigured
+
+
+try:
+    from rpc4django.jsonrpcdispatcher import JSONRPCDispatcher
+except ImproperlyConfigured:
+    # Configure Django if not already configured
+    from django.conf import settings
+    settings.configure(DEBUG=True)
+    from rpc4django.jsonrpcdispatcher import JSONRPCDispatcher
 
 try:
     # Python2
