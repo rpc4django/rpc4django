@@ -348,7 +348,7 @@ class RPCDispatcher(object):
             # check each app for any rpcmethods
             try:
                 app = __import__(appname, globals(), locals(), ['*'])
-            except (ImportError, ValueError):
+            except (TypeError, ImportError, ValueError):
                 # import throws ValueError on empty "name"
                 continue
 
