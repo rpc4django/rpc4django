@@ -2,8 +2,6 @@
 Implements an XMLRPC dispatcher
 """
 
-import sys
-
 try:
     # Python2
     from xmlrpclib import Fault, dumps
@@ -63,11 +61,9 @@ class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
         except Fault as fault:
             response = dumps(fault, allow_none=self.allow_none,
                              encoding=self.encoding)
-        except:
-            # report exception back to server
-            exc_type, exc_value, exc_tb = sys.exc_info()
+        except Exception:
             response = dumps(
-                Fault(1, "%s:%s" % (exc_type, exc_value)),
+                Fault(1, 'Unknown error'),
                 encoding=self.encoding, allow_none=self.allow_none,
             )
 
