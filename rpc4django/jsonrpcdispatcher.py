@@ -100,7 +100,7 @@ class JSONRPCDispatcher(object):
                 'message': 'Cannot decode to a javascript Object',
                 'code': JSONRPC_BAD_CALL_ERROR})
 
-        if not 'method' in jsondict:
+        if 'method' not in jsondict:
             # verify the dictionary contains the method key
             return self._encode_result(jsondict.get('id', ''), None, {
                 'message': "JSONRPC requests must have the 'method' attribute.",
