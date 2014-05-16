@@ -6,12 +6,18 @@ import sys
 
 try:
     # Python2
-    from xmlrpclib import Fault, loads, dumps
+    from xmlrpclib import Fault, dumps
     from SimpleXMLRPCServer import SimpleXMLRPCDispatcher
 except ImportError:
     # Python3
-    from xmlrpc.client import Fault, loads, dumps
+    from xmlrpc.client import Fault, dumps
     from xmlrpc.server import SimpleXMLRPCDispatcher
+
+from defusedxml import xmlrpc
+
+# This method makes the XMLRPC parser (used by loads) safe
+# from various XML based attacks
+xmlrpc.monkey_patch()
 
 
 class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
@@ -41,7 +47,7 @@ class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
         """
 
         try:
-            params, method = loads(data)
+            params, method = xmlrpc.xmlrpc_client.loads(data)
 
             try:
                 response = self._dispatch(method, params, **kwargs)
