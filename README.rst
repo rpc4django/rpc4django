@@ -9,11 +9,13 @@ Prerequisites
 -------------
 
 - Python_ 2.6, 2.7, 3.3
-- Django_ 1.3+
+- Django_ 1.4+
+- DefusedXML_
 - Docutils_ (optional)
 
 .. _Python: http://www.python.org
 .. _Django: http://www.djangoproject.com
+.. _DefusedXML: https://pypi.python.org/pypi/defusedxml
 .. _Docutils: http://docutils.sourceforge.net
 
 
