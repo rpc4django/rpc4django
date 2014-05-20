@@ -1,6 +1,16 @@
 Changelog
 =========
 
+**Version 0.3.0 (19 May 2014)**
+
+- Use the defusedxml library for XML parsing and XMLRPC which solves
+  issues with entity expansion. Thanks to Dan Burrowes for reporting the
+  issues.
+- Fix a bug involving unicode literals causing TypeErrors (`#31`_)
+
+.. _#31: https://github.com/davidfischer/rpc4django/pull/31
+
+
 **Version 0.2.5 (09 December 2013)**
 
 - Django 1.6 compatibility (`#29`_)
