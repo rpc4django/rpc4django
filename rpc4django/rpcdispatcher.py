@@ -14,10 +14,18 @@ from .xmlrpcdispatcher import XMLRPCDispatcher
 
 try:
     # Python2.x
-    from xmlrpclib import Fault, loads, ServerProxy
+    from xmlrpclib import Fault, ServerProxy
 except ImportError:
     # Python3
-    from xmlrpc.client import Fault, loads, ServerProxy
+    from xmlrpc.client import Fault, ServerProxy
+
+from defusedxml import xmlrpc
+
+
+# This method makes the XMLRPC parser (used by loads) safe
+# from various XML based attacks
+xmlrpc.monkey_patch()
+
 
 # this error code is taken from xmlrpc-epi
 # http://xmlrpc-epi.sourceforge.net/specs/rfc.fault_codes.php
@@ -391,7 +399,7 @@ class RPCDispatcher(object):
             # xmlrpclib.loads could throw an exception, but this is fine
             # since _marshaled_dispatch would throw the same thing
             try:
-                params, method = loads(raw_post_data.decode('utf-8'))
+                params, method = xmlrpc.xmlrpc_client.loads(raw_post_data.decode('utf-8'))
                 return method
             except Exception:
                 return None
