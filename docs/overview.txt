@@ -42,6 +42,7 @@ Contributors
 - Alexander Morozov
 - Albert Hopkins
 - d9pouces
+- hansenerd
 
 .. _David Fischer: mailto:rpc4django@davidfischer.name
 .. _wish list: http://amzn.com/w/1Z1GLQYQPFBT1
