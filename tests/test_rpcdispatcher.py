@@ -141,7 +141,7 @@ class TestRPCDispatcher(unittest.TestCase):
         jsontxt = '{"params":[],"method":"system.listMethods","id":1}'
         resp = self.d.jsondispatch(jsontxt.encode('utf-8'))
         jsondict = json.loads(resp)
-        self.assertTrue(jsondict['error'] is None)
+        self.assertTrue('error' not in jsondict)
         self.assertEqual(jsondict['id'], 1)
         self.assertTrue(isinstance(jsondict['result'], list))
 
@@ -151,7 +151,7 @@ class TestRPCDispatcher(unittest.TestCase):
         jsontxt = '{"params":[1,2],"method":"add","id":1}'
         resp = self.d.jsondispatch(jsontxt.encode('utf-8'))
         jsondict = json.loads(resp)
-        self.assertTrue(jsondict['error'] is None)
+        self.assertTrue('error' not in jsondict)
         self.assertEqual(jsondict['id'], 1)
         self.assertEqual(jsondict['result'], 3)
 

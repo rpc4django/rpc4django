@@ -71,7 +71,7 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         dispatcher.register_function(lambda: datetime.now(), 'datetest')
         resp = dispatcher.dispatch(jsontxt)
         jsondict = json.loads(resp)
-        self.assertTrue(jsondict['error'] is None)
+        self.assertTrue('error' not in jsondict)
         self.assertTrue(isinstance(jsondict['result'], basestring))
         self.assertEqual(type(datetime.strptime(jsondict['result'], "%Y-%m-%d %H:%M:%S")), datetime)
 
@@ -106,14 +106,14 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         jsontxt = '{"params":[],"method":"unicode_ret","id":1}'
         resp = self.dispatcher.dispatch(jsontxt)
         jsondict = json.loads(resp)
-        self.assertTrue(jsondict['error'] is None)
+        self.assertTrue('error' not in jsondict)
         self.assertEqual(jsondict['id'], 1)
         self.assertEqual(jsondict['result'], u'はじめまして')
 
         jsontxt = '{"params":["\u306f\u3058\u3081","\u307e\u3057\u3066"],"method":"add","id":2}'
         resp = self.dispatcher.dispatch(jsontxt)
         jsondict = json.loads(resp)
-        self.assertTrue(jsondict['error'] is None)
+        self.assertTrue('error' not in jsondict)
         self.assertEqual(jsondict['id'], 2)
         self.assertEqual(jsondict['result'], u'はじめまして')
 
@@ -121,14 +121,14 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         jsontxt = '{"params":[1,2],"method":"add","id":1}'
         resp = self.dispatcher.dispatch(jsontxt)
         jsondict = json.loads(resp)
-        self.assertTrue(jsondict['error'] is None)
+        self.assertTrue('error' not in jsondict)
         self.assertEqual(jsondict['id'], 1)
         self.assertEqual(jsondict['result'], 3)
 
         jsontxt = '{"params":[5],"method":"fact","id":"hello"}'
         resp = self.dispatcher.dispatch(jsontxt)
         jsondict = json.loads(resp)
-        self.assertTrue(jsondict['error'] is None)
+        self.assertTrue('error' not in jsondict)
         self.assertEqual(jsondict['id'], 'hello')
         self.assertEqual(jsondict['result'], 120)
 
@@ -136,21 +136,21 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         jsontxt = '{"params":["a"],"method":"fact","id":"hello"}'
         resp = self.dispatcher.dispatch(jsontxt)
         jsondict = json.loads(resp)
-        self.assertTrue(jsondict['result'] is None)
+        self.assertTrue('result' not in jsondict)
         self.assertTrue(jsondict['error'] is not None)
 
     def test_dispatch_paramserror(self):
         jsontxt = '{"params":[1],"method":"add","id":"4"}'
         resp = self.dispatcher.dispatch(jsontxt)
         jsondict = json.loads(resp)
-        self.assertTrue(jsondict['result'] is None)
+        self.assertTrue('result' not in jsondict)
         self.assertTrue(jsondict['error'] is not None)
 
     def test_dispatch_nomethod(self):
         jsontxt = '{"params":[],"method":"add123","id":123}'
         resp = self.dispatcher.dispatch(jsontxt)
         jsondict = json.loads(resp)
-        self.assertTrue(jsondict['result'] is None)
+        self.assertTrue('result' not in jsondict)
         self.assertEqual(jsondict['id'], 123)
         self.assertTrue(isinstance(jsondict['error'], dict))
         self.assertEqual(jsondict['error']['code'], 105)
@@ -160,7 +160,7 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         jsontxt = '"params":asdf[14]","method":"add","id":0}'
         resp = self.dispatcher.dispatch(jsontxt)
         jsondict = json.loads(resp)
-        self.assertTrue(jsondict['result'] is None)
+        self.assertTrue('result' not in jsondict)
         self.assertEqual(jsondict['id'], '')
         self.assertTrue(isinstance(jsondict['error'], dict))
         self.assertEqual(jsondict['error']['code'], 101)
@@ -169,7 +169,7 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         jsontxt = '["should", "be", "a", "Object"]'
         resp = self.dispatcher.dispatch(jsontxt)
         jsondict = json.loads(resp)
-        self.assertTrue(jsondict['result'] is None)
+        self.assertTrue('result' not in jsondict)
         self.assertEqual(jsondict['id'], '')
         self.assertTrue(isinstance(jsondict['error'], dict))
         self.assertEqual(jsondict['error']['code'], 102)
@@ -178,7 +178,7 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         jsontxt = '{"params":"shouldbelist","method":"add","id":0}'
         resp = self.dispatcher.dispatch(jsontxt)
         jsondict = json.loads(resp)
-        self.assertTrue(jsondict['result'] is None)
+        self.assertTrue('result' not in jsondict)
         self.assertEqual(jsondict['id'], 0)
         self.assertTrue(isinstance(jsondict['error'], dict))
         self.assertEqual(jsondict['error']['code'], 102)
@@ -187,7 +187,7 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         jsontxt = '{"params":"[]","method":123,"id":42}'
         resp = self.dispatcher.dispatch(jsontxt)
         jsondict = json.loads(resp)
-        self.assertTrue(jsondict['result'] is None)
+        self.assertTrue('result' not in jsondict)
         self.assertEqual(jsondict['id'], 42)
         self.assertTrue(isinstance(jsondict['error'], dict))
         self.assertEqual(jsondict['error']['code'], 102)
