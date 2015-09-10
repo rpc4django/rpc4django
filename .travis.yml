@@ -1,13 +1,27 @@
 language: python
+sudo: false
 
 python:
   - "2.6"
   - "2.7"
   - "3.3"
+  - "3.4"
+
+env:
+  - DJANGO="Django<1.4"
+  - DJANGO="Django<1.5"
+  - DJANGO="Django<1.6"
+  - DJANGO="Django<1.7"
+  - DJANGO="Django<1.8"
+  - DJANGO="Django<1.9"
 
 install:
+  - pip install -q $DJANGO
   - pip install flake8 --use-mirrors
+
+before_script:
+  - chmod +x runtravis.sh
 
 script:
   - flake8 --ignore=E501,W391 rpc4django
-  - python setup.py test
+  - ./runtravis.sh 
