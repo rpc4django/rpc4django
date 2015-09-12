@@ -52,12 +52,10 @@ class JSONRPCDispatcher(object):
         res = {'jsonrpc': '2.0', 'id': jsonid}
 
         if error is None:
-            res['error'] = None
             res['result'] = result
         else:
             res['error'] = error
             res['error']['name'] = 'JSONRPCError'
-            res['result'] = None
         try:
             return json.dumps(res, indent=JSON_INDENT, cls=self.json_encoder)
         except:
