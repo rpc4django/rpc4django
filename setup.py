@@ -53,7 +53,7 @@ setup(
     ],
 
     install_requires=['Django >= 1.3', 'defusedxml'],
-    tests_require=['Django >= 1.3'],
+    # tests_require=['Django >= 1.3'],
     extras_require={
         "reST": ['docutils >= 0.4'],
     },

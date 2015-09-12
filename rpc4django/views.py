@@ -18,7 +18,12 @@ from django.shortcuts import render_to_response
 from django.conf import settings
 from django.core.urlresolvers import reverse, NoReverseMatch, get_mod_func
 from django.views.decorators.csrf import csrf_exempt
-from django.utils.importlib import import_module
+
+try:
+    from importlib import import_module
+except ImportError:
+    from django.utils.importlib import import_module
+
 from .rpcdispatcher import RPCDispatcher
 from .__init__ import version
 
