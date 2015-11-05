@@ -145,10 +145,41 @@ class RPCMethod(object):
         self.login_required = getattr(method, 'login_required', self.permission is not None)
 
         # use inspection (reflection) to get the arguments
-        args, varargs, keywords, defaults = inspect.getargspec(method)
-        self.args = [arg for arg in args if arg != 'self']
-        self.signature = ['object' for arg in self.args]
-        self.signature.insert(0, 'object')
+        # If we're using Python 3, look for function annotations, but allow
+        # the signature parameter override them.
+
+        try:
+            args, varargs, keywords, defaults = inspect.getargspec(method)
+            # varargs = None
+            # varkw = None
+            # kwonlyargs = None
+            # kwonlydefaults = None
+            annotations = {}
+
+        except ValueError:
+            full_args = inspect.getfullargspec(method)
+            args = full_args.args
+            # varargs = full_args.varargs
+            # varkw = full_args.varkw
+            # defaults = full_args.defaults
+            # kwonlyargs = full_args.kwonlyargs
+            # kwonlydefaults = full_args.kwonlydefaults
+            annotations = full_args.annotations
+
+        self.args = [arg
+                     for arg in args
+                     if arg != 'self']
+
+        self.signature.append(annotations.get('return', object).__name__)
+        for i, arg in enumerate(self.args):
+            annotation = annotations.get(arg, None)
+            if annotation:
+                self.signature.append(annotation.__name__)
+            else:
+                try:
+                    self.signature.append(method.signature[i])
+                except (IndexError, AttributeError):
+                    self.signature.append('object')
 
         if hasattr(method, 'signature') and \
            len(method.signature) == len(self.args) + 1:
