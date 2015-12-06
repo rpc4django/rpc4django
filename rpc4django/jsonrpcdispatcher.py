@@ -33,6 +33,7 @@ class JSONRPCException(Exception):
         self.message = message
         self.code = code
 
+
 class JSONRPCDispatcher(object):
     '''
     This class can be used encode and decode jsonrpc messages, dispatch
