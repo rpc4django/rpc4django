@@ -1,8 +1,8 @@
 RPC4Django
 ==========
 
-.. image:: https://secure.travis-ci.org/davidfischer/rpc4django.png
-    :target: https://travis-ci.org/davidfischer/rpc4django
+.. image:: https://travis-ci.org/rpc4django/rpc4django.svg
+    :target: https://travis-ci.org/rpc4django/rpc4django
 
 
 Prerequisites
