@@ -59,7 +59,10 @@ APPS = getattr(settings, 'INSTALLED_APPS', [])
 def get_request_body(request):
     if hasattr(request, 'raw_post_data'):
         return request.raw_post_data
-    return request.body
+
+    encoding = getattr(request, 'encoding') or 'UTF-8'
+
+    return request.body.decode(encoding)
 
 
 def get_content_type(request):
