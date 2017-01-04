@@ -148,7 +148,7 @@ def is_xmlrpc_request(request):
 
     '''
 
-    conttype = request.META.get('CONTENT_TYPE', 'unknown type')
+    conttype = get_content_type(request)
 
     # check content type for obvious clues
     if conttype == 'text/xml' or conttype == 'application/xml':
