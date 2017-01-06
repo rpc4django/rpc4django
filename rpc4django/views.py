@@ -70,12 +70,17 @@ def get_content_type(request):
 
     Return `None` if unknown.
     """
-    header = request.META.get('CONTENT_TYPE', None)
 
-    if not header:
-        return None
+    if hasattr(request, 'content_type'):
+        conttype = request.content_type
 
-    conttype = header.partition(';')[0]  # remove ";charset="
+    else:
+        header = request.META.get('CONTENT_TYPE', None)
+
+        if not header:
+            return None
+
+        conttype = header.partition(';')[0]  # remove ";charset="
 
     return conttype
 
