@@ -147,10 +147,7 @@ def is_xmlrpc_request(request):
 
     '''
 
-    conttype = get_content_type(request)
-
-    if not conttype:
-        return False
+    conttype = get_content_type(request) or ''
 
     # check content type for obvious clues
     if conttype == 'text/xml' or conttype == 'application/xml':
