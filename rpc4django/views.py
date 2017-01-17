@@ -56,10 +56,24 @@ JSON_ENCODER = getattr(settings, 'RPC4DJANGO_JSON_ENCODER',
 APPS = getattr(settings, 'INSTALLED_APPS', [])
 
 
-def get_request_body(request):
-    if hasattr(request, 'raw_post_data'):
-        return request.raw_post_data
-    return request.body
+def get_content_type(request):
+    """Return the MIME content type giving the request
+
+    Return `None` if unknown.
+    """
+
+    if hasattr(request, 'content_type'):
+        conttype = request.content_type
+
+    else:
+        header = request.META.get('CONTENT_TYPE', None)
+
+        if not header:
+            return None
+
+        conttype = header.partition(';')[0]  # remove ";charset="
+
+    return conttype
 
 
 def check_request_permission(request, request_format='xml'):
@@ -77,8 +91,7 @@ def check_request_permission(request, request_format='xml'):
 
     user = getattr(request, 'user', None)
     methods = dispatcher.list_methods()
-    method_name = dispatcher.get_method_name(get_request_body(request),
-                                             request_format)
+    method_name = dispatcher.get_method_name(request.body, request_format)
     response = True
 
     for method in methods:
@@ -133,7 +146,7 @@ def is_xmlrpc_request(request):
 
     '''
 
-    conttype = request.META.get('CONTENT_TYPE', 'unknown type')
+    conttype = get_content_type(request) or ''
 
     # check content type for obvious clues
     if conttype == 'text/xml' or conttype == 'application/xml':
@@ -149,7 +162,7 @@ def is_xmlrpc_request(request):
     # this is slower than if the content-type was set properly
     # checking JSON is safer than XML because of entity expansion
     try:
-        json.loads(get_request_body(request))
+        json.loads(request.body.decode('utf-8'))
         return False
     except ValueError:
         return True
@@ -173,7 +186,8 @@ def serve_rpc_request(request):
         # Handle POST request with RPC payload
 
         if LOG_REQUESTS_RESPONSES:
-            logger.debug('Incoming request: %s' % str(get_request_body(request)))
+            body_text = request.body.decode('utf-8')
+            logger.debug('Incoming request: %s' % body_text)
 
         if is_xmlrpc_request(request):
             if RESTRICT_XML:
@@ -182,8 +196,7 @@ def serve_rpc_request(request):
             if not check_request_permission(request, 'xml'):
                 return HttpResponseForbidden()
 
-            resp = dispatcher.xmldispatch(get_request_body(request),
-                                          request=request)
+            resp = dispatcher.xmldispatch(request.body, request=request)
             response_type = 'text/xml'
         else:
             if RESTRICT_JSON:
@@ -192,8 +205,7 @@ def serve_rpc_request(request):
             if not check_request_permission(request, 'json'):
                 return HttpResponseForbidden()
 
-            resp = dispatcher.jsondispatch(get_request_body(request),
-                                           request=request)
+            resp = dispatcher.jsondispatch(request.body, request=request)
             response_type = 'application/json'
 
         if LOG_REQUESTS_RESPONSES:
