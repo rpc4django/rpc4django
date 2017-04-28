@@ -11,6 +11,7 @@ import types
 from django.contrib.auth import authenticate, login, logout
 from .jsonrpcdispatcher import JSONRPCDispatcher, json
 from .xmlrpcdispatcher import XMLRPCDispatcher
+from numpy import disp
 
 try:
     # Python2.x
@@ -30,61 +31,6 @@ xmlrpc.monkey_patch()
 # this error code is taken from xmlrpc-epi
 # http://xmlrpc-epi.sourceforge.net/specs/rfc.fault_codes.php
 APPLICATION_ERROR = -32500
-
-
-def rpcmethod(**kwargs):
-    '''
-    Accepts keyword based arguments that describe the method's rpc aspects
-
-    **Parameters**
-
-    ``name``
-      the name of the method to make available via RPC.
-      Defaults to the method's actual name
-    ``signature``
-      the signature of the method that will be returned by
-      calls to the XMLRPC introspection method ``system.methodSignature``.
-      It is of the form: [return_value, arg1, arg2, arg3, ...].
-      All of the types should be XMLRPC types
-      (eg. struct, int, array, etc. - see the XMLRPC spec for details).
-    ``permission``
-      the Django permission required to execute this method
-    ``login_required``
-      the method requires a user to be logged in
-
-    **Examples**
-
-    ::
-
-        @rpcmethod()
-        @rpcmethod(name='myns.myFuncName', signature=['int','int'])
-        @rpcmethod(permission='add_group')
-        @rpcmethod(login_required=True)
-
-    '''
-
-    def set_rpcmethod_info(method):
-        method.is_rpcmethod = True
-        method.signature = []
-        method.permission = None
-        method.login_required = False
-        method.external_name = getattr(method, '__name__')
-
-        if 'name' in kwargs:
-            method.external_name = kwargs['name']
-
-        if 'signature' in kwargs:
-            method.signature = kwargs['signature']
-
-        if 'permission' in kwargs:
-            method.permission = kwargs['permission']
-
-        if 'login_required' in kwargs:
-            method.login_required = kwargs['login_required']
-
-        return method
-    return set_rpcmethod_info
-
 
 class RPCMethod(object):
     '''
@@ -289,18 +235,19 @@ class RPCDispatcher(object):
         if not restrict_ootb_auth:
             self.register_method(self.system_login)
             self.register_method(self.system_logout)
+#         self.register_rpcmethods(apps)
 
-        self.register_rpcmethods(apps)
 
-    @rpcmethod(name='system.describe', signature=['struct'])
-    def system_describe(self):
+#     @rpcmethod(name='system.describe', signature=['struct'])
+    def system_describe(self, **kwargs):
         '''
         Returns a simple method description of the methods supported
         '''
-
+        request = kwargs.get('request', None)
         description = {}
         description['serviceType'] = 'RPC4Django JSONRPC+XMLRPC'
-        description['serviceURL'] = self.url,
+#         description['serviceURL'] = self.url,
+        description['serviceURL'] = request.path,
         description['methods'] = [{'name': method.name,
                                    'summary': method.help,
                                    'params': method.get_params(),
@@ -309,7 +256,7 @@ class RPCDispatcher(object):
 
         return description
 
-    @rpcmethod(name='system.listMethods', signature=['array'])
+#     @rpcmethod(name='system.listMethods', signature=['array'])
     def system_listmethods(self):
         '''
         Returns a list of supported methods
@@ -319,7 +266,7 @@ class RPCDispatcher(object):
         methods.sort()
         return methods
 
-    @rpcmethod(name='system.methodHelp', signature=['string', 'string'])
+#     @rpcmethod(name='system.methodHelp', signature=['string', 'string'])
     def system_methodhelp(self, method_name):
         '''
         Returns documentation for a specified method
@@ -335,7 +282,7 @@ class RPCDispatcher(object):
         raise Fault(APPLICATION_ERROR, 'No method found with name: ' +
                     str(method_name))
 
-    @rpcmethod(name='system.methodSignature', signature=['array', 'string'])
+#     @rpcmethod(name='system.methodSignature', signature=['array', 'string'])
     def system_methodsignature(self, method_name):
         '''
         Returns the signature for a specified method
@@ -347,7 +294,7 @@ class RPCDispatcher(object):
         raise Fault(APPLICATION_ERROR, 'No method found with name: ' +
                     str(method_name))
 
-    @rpcmethod(name='system.login', signature=['boolean', 'string', 'string'])
+#     @rpcmethod(name='system.login', signature=['boolean', 'string', 'string'])
     def system_login(self, username, password, **kwargs):
         '''
         Authorizes a user to enable sending protected RPC requests
@@ -363,7 +310,7 @@ class RPCDispatcher(object):
 
         return False
 
-    @rpcmethod(name='system.logout', signature=['boolean'])
+#     @rpcmethod(name='system.logout', signature=['boolean'])
     def system_logout(self, **kwargs):
         '''
         Deauthorizes a user
@@ -377,34 +324,34 @@ class RPCDispatcher(object):
 
         return False
 
-    def register_rpcmethods(self, apps):
-        '''
-        Scans the installed apps for methods with the rpcmethod decorator
-        Adds these methods to the list of methods callable via RPC
-        '''
-
-        for appname in apps:
-            # check each app for any rpcmethods
-            try:
-                app = __import__(appname, globals(), locals(), ['*'])
-            except (TypeError, ImportError, ValueError):
-                # import throws ValueError on empty "name"
-                continue
-
-            for obj in dir(app):
-                method = getattr(app, obj)
-                if isinstance(method, ServerProxy):
-                    continue
-                if callable(method) and \
-                   hasattr(method, 'is_rpcmethod') and \
-                   method.is_rpcmethod is True:
-                    # if this method is callable and it has the rpcmethod
-                    # decorator, add it to the dispatcher
-                    self.register_method(method, method.external_name)
-                elif isinstance(method, types.ModuleType):
-                    # if this is not a method and instead a sub-module,
-                    # scan the module for methods with @rpcmethod
-                    self.register_rpcmethods(["%s.%s" % (appname, obj)])
+#     def register_rpcmethods(self, apps):
+#         '''
+#         Scans the installed apps for methods with the rpcmethod decorator
+#         Adds these methods to the list of methods callable via RPC
+#         '''
+# 
+#         for appname in apps:
+#             # check each app for any rpcmethods
+#             try:
+#                 app = __import__(appname, globals(), locals(), ['*'])
+#             except (TypeError, ImportError, ValueError):
+#                 # import throws ValueError on empty "name"
+#                 continue
+# 
+#             for obj in dir(app):
+#                 method = getattr(app, obj)
+#                 if isinstance(method, ServerProxy):
+#                     continue
+#                 if callable(method) and \
+#                    hasattr(method, 'is_rpcmethod') and \
+#                    method.is_rpcmethod is True:
+#                     # if this method is callable and it has the rpcmethod
+#                     # decorator, add it to the dispatcher
+#                     self.register_method(method, method.external_name)
+#                 elif isinstance(method, types.ModuleType):
+#                     # if this is not a method and instead a sub-module,
+#                     # scan the module for methods with @rpcmethod
+#                     self.register_rpcmethods(["%s.%s" % (appname, obj)])
 
     def jsondispatch(self, raw_post_data, **kwargs):
         '''
@@ -479,3 +426,100 @@ class RPCDispatcher(object):
             self.xmlrpcdispatcher.register_function(method, meth.name)
             self.jsonrpcdispatcher.register_function(method, meth.name)
             self.rpcmethods.append(meth)
+            
+from django.conf import settings          
+try:
+    from importlib import import_module
+except ImportError:
+    from django.utils.importlib import import_module  
+    
+from django.core.urlresolvers import get_mod_func
+            
+            
+RESTRICT_INTROSPECTION = getattr(settings,
+                                 'RPC4DJANGO_RESTRICT_INTROSPECTION', False)
+RESTRICT_OOTB_AUTH = getattr(settings,
+                             'RPC4DJANGO_RESTRICT_OOTB_AUTH', True)
+
+JSON_ENCODER = getattr(settings, 'RPC4DJANGO_JSON_ENCODER',
+                       'django.core.serializers.json.DjangoJSONEncoder')
+            
+# get a list of the installed django applications
+# these will be scanned for @rpcmethod decorators
+APPS = getattr(settings, 'INSTALLED_APPS', [])            
+
+
+try:
+    # Python2
+    basestring
+except NameError:
+    # Python3
+    basestring = str
+
+    
+
+# resolve JSON_ENCODER to class if it's a string
+if isinstance(JSON_ENCODER, basestring):
+    mod_name, cls_name = get_mod_func(JSON_ENCODER)
+    json_encoder = getattr(import_module(mod_name), cls_name)
+else:
+    json_encoder = JSON_ENCODER
+    
+# instantiate the rpcdispatcher -- this examines the INSTALLED_APPS
+# for any @rpcmethod decorators and adds them to the callable methods
+dispatcher = RPCDispatcher('', APPS, RESTRICT_INTROSPECTION,
+                           RESTRICT_OOTB_AUTH, json_encoder)
+
+def rpcmethod(**kwargs):
+    '''
+    Accepts keyword based arguments that describe the method's rpc aspects
+
+    **Parameters**
+
+    ``name``
+      the name of the method to make available via RPC.
+      Defaults to the method's actual name
+    ``signature``
+      the signature of the method that will be returned by
+      calls to the XMLRPC introspection method ``system.methodSignature``.
+      It is of the form: [return_value, arg1, arg2, arg3, ...].
+      All of the types should be XMLRPC types
+      (eg. struct, int, array, etc. - see the XMLRPC spec for details).
+    ``permission``
+      the Django permission required to execute this method
+    ``login_required``
+      the method requires a user to be logged in
+
+    **Examples**
+
+    ::
+
+        @rpcmethod()
+        @rpcmethod(name='myns.myFuncName', signature=['int','int'])
+        @rpcmethod(permission='add_group')
+        @rpcmethod(login_required=True)
+
+    '''
+
+    def set_rpcmethod_info(method):
+        method.is_rpcmethod = True
+        method.signature = []
+        method.permission = None
+        method.login_required = False
+        method.external_name = getattr(method, '__name__')
+
+        if 'name' in kwargs:
+            method.external_name = kwargs['name']
+
+        if 'signature' in kwargs:
+            method.signature = kwargs['signature']
+
+        if 'permission' in kwargs:
+            method.permission = kwargs['permission']
+
+        if 'login_required' in kwargs:
+            method.login_required = kwargs['login_required']
+
+        dispatcher.register_method(method)
+        return method
+    return set_rpcmethod_info
