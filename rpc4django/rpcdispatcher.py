@@ -10,12 +10,11 @@ import pydoc
 from django.contrib.auth import authenticate, login, logout
 from .jsonrpcdispatcher import JSONRPCDispatcher, json
 from .xmlrpcdispatcher import XMLRPCDispatcher
-from django.conf import settings          
+from django.conf import settings
 try:
     from importlib import import_module
 except ImportError:
-    from django.utils.importlib import import_module  
-    
+    from django.utils.importlib import import_module
 from django.core.urlresolvers import get_mod_func
 
 try:
@@ -399,8 +398,8 @@ class RPCDispatcher(object):
             self.xmlrpcdispatcher.register_function(method, meth.name)
             self.jsonrpcdispatcher.register_function(method, meth.name)
             self.rpcmethods.append(meth)
-            
-            
+
+
 RESTRICT_INTROSPECTION = getattr(settings,
                                  'RPC4DJANGO_RESTRICT_INTROSPECTION', False)
 RESTRICT_OOTB_AUTH = getattr(settings,
@@ -408,7 +407,7 @@ RESTRICT_OOTB_AUTH = getattr(settings,
 
 JSON_ENCODER = getattr(settings, 'RPC4DJANGO_JSON_ENCODER',
                        'django.core.serializers.json.DjangoJSONEncoder')
-            
+
 try:
     # Python2
     basestring
@@ -422,11 +421,12 @@ if isinstance(JSON_ENCODER, basestring):
     json_encoder = getattr(import_module(mod_name), cls_name)
 else:
     json_encoder = JSON_ENCODER
-    
+
 # instantiate the rpcdispatcher -- this examines the INSTALLED_APPS
 # for any @rpcmethod decorators and adds them to the callable methods
 dispatcher = RPCDispatcher(RESTRICT_INTROSPECTION,
                            RESTRICT_OOTB_AUTH, json_encoder)
+
 
 def rpcmethod(**kwargs):
     '''
