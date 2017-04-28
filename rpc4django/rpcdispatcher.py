@@ -231,14 +231,14 @@ class RPCDispatcher(object):
         self.xmlrpcdispatcher = XMLRPCDispatcher()
 
         if not restrict_introspection:
-            self.register_method(self.system_listmethods,'system.listMethods',['array'])
-            self.register_method(self.system_methodhelp,'system.methodHelp',['string', 'string'])
-            self.register_method(self.system_methodsignature,'system.methodSignature',['array', 'string'])
-            self.register_method(self.system_describe,'system.describe',['struct'])
+            self.register_method(self.system_listmethods, 'system.listMethods', ['array'])
+            self.register_method(self.system_methodhelp, 'system.methodHelp', ['string', 'string'])
+            self.register_method(self.system_methodsignature, 'system.methodSignature', ['array', 'string'])
+            self.register_method(self.system_describe, 'system.describe', ['struct'])
 
         if not restrict_ootb_auth:
-            self.register_method(self.system_login,'system.login',['boolean', 'string', 'string'])
-            self.register_method(self.system_logout,'system.logout',['boolean'])
+            self.register_method(self.system_login, 'system.login', ['boolean', 'string', 'string'])
+            self.register_method(self.system_logout, 'system.logout', ['boolean'])
 
 #     @rpcmethod(name='system.describe', signature=['struct'])
     def system_describe(self, **kwargs):
