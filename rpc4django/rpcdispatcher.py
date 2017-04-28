@@ -19,10 +19,10 @@ from django.core.urlresolvers import get_mod_func
 
 try:
     # Python2.x
-    from xmlrpclib import Fault, ServerProxy
+    from xmlrpclib import Fault
 except ImportError:
     # Python3
-    from xmlrpc.client import Fault, ServerProxy
+    from xmlrpc.client import Fault
 
 from defusedxml import xmlrpc
 
