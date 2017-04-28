@@ -19,9 +19,7 @@ from django.conf import settings
 
 from django.views.decorators.csrf import csrf_exempt
 
-
-
-from .rpcdispatcher import RPCDispatcher,dispatcher
+from .rpcdispatcher import dispatcher
 from .__init__ import version
 
 logger = logging.getLogger('rpc4django')
@@ -42,9 +40,6 @@ HTTP_ACCESS_CREDENTIALS = getattr(settings,
                                   'RPC4DJANGO_HTTP_ACCESS_CREDENTIALS', False)
 HTTP_ACCESS_ALLOW_ORIGIN = getattr(settings,
                                    'RPC4DJANGO_HTTP_ACCESS_ALLOW_ORIGIN', '')
-
-
-
 
 
 def get_content_type(request):
@@ -234,7 +229,6 @@ def serve_rpc_request(request):
         methods = dispatcher.list_methods()
         template_data = {
             'methods': methods,
-#             'url': URL,
             'url': request.path,
 
             # rpc4django version
@@ -247,16 +241,3 @@ def serve_rpc_request(request):
         return render_to_response('rpc4django/rpcmethod_summary.html',
                                   template_data,
                                   context_instance=RequestContext(request))
-
-
-# reverse the method for use with system.describe and ajax
-# try:
-#     URL = reverse(serve_rpc_request)
-# except NoReverseMatch:
-#     URL = ''
-
-
-    
-
-
-
