@@ -1,4 +1,5 @@
 from django.conf.urls import patterns
+from rpc4django.views import serve_rpc_request
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -15,5 +16,5 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     # (r'^admin/(.*)', admin.site.root),
     ('^$', 'rpc4django.views.serve_rpc_request'),
-    ('^RPC2$', 'rpc4django.views.serve_rpc_request'),
+    ('^RPC2$', serve_rpc_request),
 )
