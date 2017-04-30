@@ -16,15 +16,10 @@ import json
 from django.http import HttpResponse, Http404, HttpResponseForbidden
 from django.shortcuts import render_to_response
 from django.conf import settings
-from django.core.urlresolvers import reverse, NoReverseMatch, get_mod_func
+
 from django.views.decorators.csrf import csrf_exempt
 
-try:
-    from importlib import import_module
-except ImportError:
-    from django.utils.importlib import import_module
-
-from .rpcdispatcher import RPCDispatcher
+from .rpcdispatcher import dispatcher
 from .__init__ import version
 
 logger = logging.getLogger('rpc4django')
@@ -34,10 +29,7 @@ logger = logging.getLogger('rpc4django')
 # see the rpc4django documentation for more details
 LOG_REQUESTS_RESPONSES = getattr(settings,
                                  'RPC4DJANGO_LOG_REQUESTS_RESPONSES', True)
-RESTRICT_INTROSPECTION = getattr(settings,
-                                 'RPC4DJANGO_RESTRICT_INTROSPECTION', False)
-RESTRICT_OOTB_AUTH = getattr(settings,
-                             'RPC4DJANGO_RESTRICT_OOTB_AUTH', True)
+
 RESTRICT_JSON = getattr(settings, 'RPC4DJANGO_RESTRICT_JSONRPC', False)
 RESTRICT_XML = getattr(settings, 'RPC4DJANGO_RESTRICT_XMLRPC', False)
 RESTRICT_METHOD_SUMMARY = getattr(settings,
@@ -48,12 +40,6 @@ HTTP_ACCESS_CREDENTIALS = getattr(settings,
                                   'RPC4DJANGO_HTTP_ACCESS_CREDENTIALS', False)
 HTTP_ACCESS_ALLOW_ORIGIN = getattr(settings,
                                    'RPC4DJANGO_HTTP_ACCESS_ALLOW_ORIGIN', '')
-JSON_ENCODER = getattr(settings, 'RPC4DJANGO_JSON_ENCODER',
-                       'django.core.serializers.json.DjangoJSONEncoder')
-
-# get a list of the installed django applications
-# these will be scanned for @rpcmethod decorators
-APPS = getattr(settings, 'INSTALLED_APPS', [])
 
 
 def get_content_type(request):
@@ -243,7 +229,7 @@ def serve_rpc_request(request):
         methods = dispatcher.list_methods()
         template_data = {
             'methods': methods,
-            'url': URL,
+            'url': request.path,
 
             # rpc4django version
             'version': version(),
@@ -255,30 +241,3 @@ def serve_rpc_request(request):
         return render_to_response('rpc4django/rpcmethod_summary.html',
                                   template_data,
                                   context_instance=RequestContext(request))
-
-
-# reverse the method for use with system.describe and ajax
-try:
-    URL = reverse(serve_rpc_request)
-except NoReverseMatch:
-    URL = ''
-
-try:
-    # Python2
-    basestring
-except NameError:
-    # Python3
-    basestring = str
-
-# resolve JSON_ENCODER to class if it's a string
-if isinstance(JSON_ENCODER, basestring):
-    mod_name, cls_name = get_mod_func(JSON_ENCODER)
-    json_encoder = getattr(import_module(mod_name), cls_name)
-else:
-    json_encoder = JSON_ENCODER
-
-
-# instantiate the rpcdispatcher -- this examines the INSTALLED_APPS
-# for any @rpcmethod decorators and adds them to the callable methods
-dispatcher = RPCDispatcher(URL, APPS, RESTRICT_INTROSPECTION,
-                           RESTRICT_OOTB_AUTH, json_encoder)
