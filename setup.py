@@ -19,7 +19,7 @@ RPC4Django Documentation
 
 setup(
     name='rpc4django',
-    version='0.3.0',
+    version='0.4.0',
     description='Handles JSONRPC and XMLRPC requests easily with Django',
     long_description=long_description,
     author='David Fischer',
