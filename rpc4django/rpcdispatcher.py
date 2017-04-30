@@ -240,7 +240,6 @@ class RPCDispatcher(object):
             self.register_method(self.system_login, 'system.login', ['boolean', 'string', 'string'])
             self.register_method(self.system_logout, 'system.logout', ['boolean'])
 
-#     @rpcmethod(name='system.describe', signature=['struct'])
     def system_describe(self, **kwargs):
         '''
         Returns a simple method description of the methods supported
@@ -257,7 +256,6 @@ class RPCDispatcher(object):
 
         return description
 
-#     @rpcmethod(name='system.listMethods', signature=['array'])
     def system_listmethods(self):
         '''
         Returns a list of supported methods
@@ -267,7 +265,6 @@ class RPCDispatcher(object):
         methods.sort()
         return methods
 
-#     @rpcmethod(name='system.methodHelp', signature=['string', 'string'])
     def system_methodhelp(self, method_name):
         '''
         Returns documentation for a specified method
@@ -283,7 +280,6 @@ class RPCDispatcher(object):
         raise Fault(APPLICATION_ERROR, 'No method found with name: ' +
                     str(method_name))
 
-#     @rpcmethod(name='system.methodSignature', signature=['array', 'string'])
     def system_methodsignature(self, method_name):
         '''
         Returns the signature for a specified method
@@ -295,7 +291,6 @@ class RPCDispatcher(object):
         raise Fault(APPLICATION_ERROR, 'No method found with name: ' +
                     str(method_name))
 
-#     @rpcmethod(name='system.login', signature=['boolean', 'string', 'string'])
     def system_login(self, username, password, **kwargs):
         '''
         Authorizes a user to enable sending protected RPC requests
@@ -311,7 +306,6 @@ class RPCDispatcher(object):
 
         return False
 
-#     @rpcmethod(name='system.logout', signature=['boolean'])
     def system_logout(self, **kwargs):
         '''
         Deauthorizes a user
