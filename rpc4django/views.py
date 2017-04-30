@@ -14,7 +14,7 @@ The main entry point for RPC4Django. Usually, the user simply puts
 import logging
 import json
 from django.http import HttpResponse, Http404, HttpResponseForbidden
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.conf import settings
 
 from django.views.decorators.csrf import csrf_exempt
@@ -238,6 +238,8 @@ def serve_rpc_request(request):
             'restrict_rpctest': RESTRICT_RPCTEST,
         }
         from django.template import RequestContext
-        return render_to_response('rpc4django/rpcmethod_summary.html',
-                                  template_data,
-                                  context_instance=RequestContext(request))
+        return render(
+            request,
+            'rpc4django/rpcmethod_summary.html',
+            template_data,
+        )
