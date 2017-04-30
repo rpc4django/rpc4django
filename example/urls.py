@@ -1,11 +1,12 @@
-from django.conf.urls import patterns
+from django.conf.urls import url
+
 from rpc4django.views import serve_rpc_request
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = [
     # Example:
     # (r'^example/', include('example.foo.urls')),
 
@@ -15,6 +16,6 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # (r'^admin/(.*)', admin.site.root),
-    ('^$', 'rpc4django.views.serve_rpc_request'),
-    ('^RPC2$', serve_rpc_request),
-)
+    url('^$', serve_rpc_request),
+    url('^RPC2$', serve_rpc_request),
+]
