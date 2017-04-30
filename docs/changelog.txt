@@ -1,6 +1,21 @@
 Changelog
 =========
 
+**Version 0.4.0 (30 Apr 2017)**
+
+- Preliminary support for PEP3107 function annotations (`#43`_)
+- Modifications for compatibility with Django 1.8-1.11 (`#49`_)
+- Fixes for unexpected content types (`#47`_)
+- Fixes for JSONRPC 2.0 spec (`#32`_)
+- Drop support for Django before 1.8 (follow Django project supported versions)
+
+Thanks to all those who helped out!
+
+.. _#32: https://github.com/rpc4django/rpc4django/issues/32
+.. _#43: https://github.com/rpc4django/rpc4django/pull/43
+.. _#47: https://github.com/rpc4django/rpc4django/pull/47
+.. _#49: https://github.com/rpc4django/rpc4django/pull/49
+
 **Version 0.3.0 (19 May 2014)**
 
 - Use the defusedxml library for XML parsing and XMLRPC which solves
