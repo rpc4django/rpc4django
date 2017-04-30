@@ -237,7 +237,7 @@ def serve_rpc_request(request):
             # restricts the ability to test the rpc server from the docs
             'restrict_rpctest': RESTRICT_RPCTEST,
         }
-        from django.template import RequestContext
+
         return render(
             request,
             'rpc4django/rpcmethod_summary.html',
