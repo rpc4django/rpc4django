@@ -7,10 +7,11 @@ import sys
 # Handle incompatible versions of Python & Django
 # https://docs.djangoproject.com/en/dev/faq/install/#what-python-version-can-i-use-with-django
 SUPPORTED_VERSIONS = {
-    '2.7': ('Django<1.9', 'Django<1.10', 'Django<1.11'),
+    '2.7': ('Django<1.9', 'Django<1.10', 'Django<1.11', 'Django<1.12'),
     '3.3': ('Django<1.9',),
-    '3.4': ('Django<1.9', 'Django<1.10', 'Django<1.11'),
-    '3.5': ('Django<1.9', 'Django<1.10', 'Django<1.11'),
+    '3.4': ('Django<1.9', 'Django<1.10', 'Django<1.11', 'Django<1.12'),
+    '3.5': ('Django<1.9', 'Django<1.10', 'Django<1.11', 'Django<1.12'),
+    '3.6': ('Django<1.12',),
 }
 
 python_version = os.environ.get('TRAVIS_PYTHON_VERSION')
