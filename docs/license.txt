@@ -3,7 +3,7 @@ License
 
 RPC4Django is licensed under the BSD license.
 
-Copyright (c) 2009 - 2013, David Fischer
+Copyright (c) 2009 - 2017, David Fischer and contributors
 
 All rights reserved.
 
