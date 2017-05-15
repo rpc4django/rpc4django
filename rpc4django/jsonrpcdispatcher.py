@@ -127,7 +127,7 @@ class JSONRPCDispatcher(object):
             # if request is the first arg of func and request is provided in kwargs we inject it
             if 'request' in kwargs and inspect.getargspec(func)[0][0] == 'request':
                 request = kwargs.pop('request')
-                params = (request,) + params
+                params = [request,] + params
             try:
                 try:
                     result = func(*params, **kwargs)
