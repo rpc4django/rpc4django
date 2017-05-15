@@ -76,13 +76,11 @@ class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
         """
 
         func = self.funcs.get(method, None)
-        
-        #add some magic
-        #if request is the first arg of func and request is provided in kwargs we inject it
+        # add some magic
+        # if request is the first arg of func and request is provided in kwargs we inject it
         if 'request' in kwargs and inspect.getargspec(func)[0][0] == 'request':
             request = kwargs.pop('request')
             params = (request,) + params
-        
         if func is not None:
             if len(kwargs) > 0:
                 return func(*params, **kwargs)
