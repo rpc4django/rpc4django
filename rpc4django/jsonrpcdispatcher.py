@@ -4,6 +4,7 @@ This module implements a JSON 1.0 compatible dispatcher
 see http://json-rpc.org/wiki/specification
 '''
 
+import inspect
 import json
 
 # indent the json output by this many characters
@@ -120,12 +121,19 @@ class JSONRPCDispatcher(object):
                 'code': JSONRPC_BAD_CALL_ERROR})
 
         if jsondict['method'] in self.methods:
+            func = self.methods[jsondict.get('method')]
+            params = jsondict.get('params', [])
+            #add some magic
+            #if request is the first arg of func and request is provided in kwargs we inject it
+            if 'request' in kwargs and inspect.getargspec(func)[0][0] == 'request':
+                request = kwargs.pop('request')
+                params = (request,)+params
             try:
                 try:
-                    result = self.methods[jsondict.get('method')](*jsondict.get('params', []), **kwargs)
+                    result = func(*params, **kwargs)
                 except TypeError:
                     # Catch unexpected keyword argument error
-                    result = self.methods[jsondict.get('method')](*jsondict.get('params', []))
+                    result = func(*params)
             except JSONRPCException as e:
                 # Custom message and code
                 return self._encode_result(jsondict.get('id', ''), None, {
