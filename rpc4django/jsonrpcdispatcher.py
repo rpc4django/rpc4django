@@ -123,8 +123,8 @@ class JSONRPCDispatcher(object):
         if jsondict['method'] in self.methods:
             func = self.methods[jsondict.get('method')]
             params = jsondict.get('params', [])
-            #add some magic
-            #if request is the first arg of func and request is provided in kwargs we inject it
+            # add some magic
+            # if request is the first arg of func and request is provided in kwargs we inject it
             if 'request' in kwargs and inspect.getargspec(func)[0][0] == 'request':
                 request = kwargs.pop('request')
                 params = (request,)+params
