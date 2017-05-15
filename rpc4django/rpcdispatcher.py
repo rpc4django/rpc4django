@@ -183,12 +183,16 @@ class RPCMethod(object):
             arglist = []
             if len(self.signature) == len(self.args) + 1:
                 for argnum in range(len(self.args)):
+                    if self.args[argnum] == 'request':
+                        continue
                     arglist.append({'name': self.args[argnum],
                                     'rpctype': self.signature[argnum + 1]})
                 return arglist
             else:
                 # this should not happen under normal usage
                 for argnum in range(len(self.args)):
+                    if self.args[argnum] == 'request':
+                        continue
                     arglist.append({'name': self.args[argnum],
                                     'rpctype': 'object'})
                 return arglist
