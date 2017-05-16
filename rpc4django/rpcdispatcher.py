@@ -125,7 +125,7 @@ class RPCMethod(object):
         for i, arg in enumerate(self.args):
             annotation = annotations.get(arg, None)
             if annotation:
-                self.signature.append(annotation.__name__)
+                self.signature.append(annotation)
             else:
                 try:
                     self.signature.append(method.signature[i])
