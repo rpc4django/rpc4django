@@ -119,7 +119,7 @@ class RPCMethod(object):
 
         self.args = [arg
                      for arg in args
-                     if arg != 'self']
+                     if arg not in ('self', 'request')]
 
         self.signature.append(annotations.get('return', object).__name__)
         for i, arg in enumerate(self.args):
