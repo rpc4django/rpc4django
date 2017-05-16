@@ -39,13 +39,24 @@ def intro():
     
     return u'はじめまして'
 
-@rpcmethod(name='view.request')
-def request(**kwargs):
+@rpcmethod(name='view.getrequest')
+def getrequest(**kwargs):
     '''
     Illustrates access to the HttpRequest object
     '''
     
     request = kwargs.get('request', None)
+    
+    if request is not None:
+        return str(request)
+    else:
+        return "No Access"
+    
+@rpcmethod(name='view.getrequest2')
+def getrequest2(request):
+    '''
+    Other example to illustrates access to the HttpRequest object
+    '''
     
     if request is not None:
         return str(request)
