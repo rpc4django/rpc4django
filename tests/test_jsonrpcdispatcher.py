@@ -47,6 +47,12 @@ class TestJSONRPCDispatcher(unittest.TestCase):
             if kwargs.get('c', None) is not None:
                 return True
             return False
+        
+        def withoutargstest():
+            return True
+        
+        def requestargtest(request,a):
+            return request
 
         self.dispatcher = JSONRPCDispatcher()
         self.dispatcher.register_function(add, 'add')
@@ -54,6 +60,8 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         self.dispatcher.register_function(unicode_ret, 'unicode_ret')
         self.dispatcher.register_function(kwargstest, 'kwargstest')
         self.dispatcher.register_function(lambda: datetime.now(), 'datetest')
+        self.dispatcher.register_function(requestargtest, 'requestargtest')
+        self.dispatcher.register_function(withoutargstest, 'withoutargstest')
 
     def test_dates(self):
         jsontxt = json.dumps({"method": "datetest", "id": 1, "params": []})
@@ -99,6 +107,16 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         self.assertFalse(jsondict['result'])
 
         resp = self.dispatcher.dispatch(jsontxt, c=1)
+        jsondict = json.loads(resp)
+        self.assertTrue(jsondict['result'])
+        
+        jsontxt = json.dumps({'params':(1,), 'method':'requestargtest'})
+        resp = self.dispatcher.dispatch(jsontxt, request=True)
+        jsondict = json.loads(resp)
+        self.assertTrue(jsondict['result'])
+        
+        jsontxt = json.dumps({'params':[], 'method':'withoutargstest'})
+        resp = self.dispatcher.dispatch(jsontxt, request='fakerequest')
         jsondict = json.loads(resp)
         self.assertTrue(jsondict['result'])
 
