@@ -131,7 +131,7 @@ class JSONRPCDispatcher(object):
                 args = inspect.getargspec(func)[0]
             if args and 'request' in kwargs and args[0] == 'request':
                 request = kwargs.pop('request')
-                params = [request,] + params
+                params = [request, ] + params
             try:
                 try:
                     result = func(*params, **kwargs)
