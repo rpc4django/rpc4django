@@ -119,13 +119,13 @@ class RPCMethod(object):
 
         self.args = [arg
                      for arg in args
-                     if arg != 'self']
+                     if arg not in ('self', 'request')]
 
-        self.signature.append(annotations.get('return', object).__name__)
+        self.signature.append(annotations.get('return', 'object'))
         for i, arg in enumerate(self.args):
             annotation = annotations.get(arg, None)
             if annotation:
-                self.signature.append(annotation.__name__)
+                self.signature.append(annotation)
             else:
                 try:
                     self.signature.append(method.signature[i])
@@ -183,12 +183,16 @@ class RPCMethod(object):
             arglist = []
             if len(self.signature) == len(self.args) + 1:
                 for argnum in range(len(self.args)):
+                    if self.args[argnum] == 'request':
+                        continue
                     arglist.append({'name': self.args[argnum],
                                     'rpctype': self.signature[argnum + 1]})
                 return arglist
             else:
                 # this should not happen under normal usage
                 for argnum in range(len(self.args)):
+                    if self.args[argnum] == 'request':
+                        continue
                     arglist.append({'name': self.args[argnum],
                                     'rpctype': 'object'})
                 return arglist

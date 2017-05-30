@@ -29,9 +29,17 @@ class TestXMLRPCDispatcher(unittest.TestCase):
             if kwargs.get('c', None) is not None:
                 return True
             return False
+        
+        def withoutargstest():
+            return True
+        
+        def requestargtest(request,a):
+            return request
 
         self.dispatcher = XMLRPCDispatcher()
         self.dispatcher.register_function(kwargstest, 'kwargstest')
+        self.dispatcher.register_function(requestargtest, 'requestargtest')
+        self.dispatcher.register_function(withoutargstest, 'withoutargstest')
 
     def test_kwargs(self):
         xml = dumps((1, 2), 'kwargstest')
@@ -40,6 +48,22 @@ class TestXMLRPCDispatcher(unittest.TestCase):
         self.assertFalse(out[0])
 
         ret = self.dispatcher.dispatch(xml, c=1)
+        out, name = loads(ret)
+        self.assertTrue(out[0])
+        
+        xml = dumps((1,),'requestargtest')
+        ret = self.dispatcher.dispatch(xml, request=True)
+        out, name = loads(ret)
+        self.assertTrue(out[0])
+        
+        xml = """<?xml version='1.0'?>
+<methodCall>
+<methodName>withoutargstest</methodName>
+<params>
+</params>
+</methodCall>
+        """
+        ret = self.dispatcher.dispatch(xml, request='fakerequest')
         out, name = loads(ret)
         self.assertTrue(out[0])
 

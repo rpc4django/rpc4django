@@ -11,6 +11,7 @@ except ImportError:
     from xmlrpc.client import Fault, dumps
     from xmlrpc.server import SimpleXMLRPCDispatcher
 
+import inspect
 from defusedxml import xmlrpc
 
 # This method makes the XMLRPC parser (used by loads) safe
@@ -75,7 +76,15 @@ class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
         """
 
         func = self.funcs.get(method, None)
-
+        # add some magic
+        # if request is the first arg of func and request is provided in kwargs we inject it
+        if hasattr(inspect, 'signature'):  # python 3
+            args = list(inspect.signature(func).parameters)
+        else:  # python 2
+            args = inspect.getargspec(func)[0]
+        if args and 'request' in kwargs and args[0] == 'request':
+            request = kwargs.pop('request')
+            params = (request,) + params
         if func is not None:
             if len(kwargs) > 0:
                 return func(*params, **kwargs)
