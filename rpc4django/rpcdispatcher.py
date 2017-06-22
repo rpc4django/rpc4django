@@ -239,6 +239,7 @@ class RPCDispatcher(object):
             self.register_method(self.system_methodhelp, 'system.methodHelp', ['string', 'string'])
             self.register_method(self.system_methodsignature, 'system.methodSignature', ['array', 'string'])
             self.register_method(self.system_describe, 'system.describe', ['struct'])
+            self.register_method(self.system_multicall, 'system.multicall', ['array', 'array'])
 
         if not restrict_ootb_auth:
             self.register_method(self.system_login, 'system.login', ['boolean', 'string', 'string'])
@@ -259,6 +260,21 @@ class RPCDispatcher(object):
                                   for method in self.rpcmethods]
 
         return description
+    
+    def system_multicall(self, calls, **kwargs):
+       '''
+       implements: http://mirrors.talideon.com/articles/multicall.html
+       Returns a list of results of functions
+       '''
+       
+       request = kwargs.get('request')
+       result = []
+       for call in calls:
+           if is_xmlrpc_request(request):
+              result.append(self.xmlrpcdispatcher._dispatch(call['methodName'], call['params'], **kwargs))
+           else:
+              result.append(self.jsonrpcdispatcher._dispatch(call['methodName'], call['params'], **kwargs))
+       return result
 
     def system_listmethods(self):
         '''
