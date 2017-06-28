@@ -211,23 +211,5 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         self.assertEqual(jsondict['error']['code'], 102)
         self.assertEqual(jsondict['error']['message'], 'method must be a javascript String')
 
-    def test_multicall(self):
-        marshalled_list = [
-            {'methodName' : 'add', 'params' : [1,2]},
-            {'methodName' : 'withoutargstest', 'params' : []},
-        ]
-        call = {'method':'system.multicall','params':marshalled_list}
-        jsontxt = json.dumps(call)
-        print(jsontxt)
-        resp = self.dispatcher.dispatch(jsontxt)
-        jsondict = json.loads(resp)
-        print(jsondict)
-        xml = dumps((marshalled_list,), 'system.multicall')
-        ret = self.dispatcher.dispatch(xml)
-        out, name = loads(ret)
-        self.assertFalse(out[0][0][0])
-        self.assertTrue(out[0][1][0])
-        self.assertTrue(out[0][2][0])
-
 if __name__ == '__main__':
     unittest.main()
