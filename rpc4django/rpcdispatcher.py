@@ -262,7 +262,6 @@ class RPCDispatcher(object):
         return description
     
     def system_multicall(self, calls, **kwargs):
-        
         '''
         implements: http://mirrors.talideon.com/articles/multicall.html
         Returns a list of results of functions
