@@ -260,16 +260,16 @@ class RPCDispatcher(object):
                                   for method in self.rpcmethods.values()]
 
         return description
-    
+
     def system_multicall(self, calls, **kwargs):
         '''
         implements: http://mirrors.talideon.com/articles/multicall.html
         Returns a list of results of functions
         '''
+        
         from .views import is_xmlrpc_request
         request = kwargs.get('request')
         result = []
-        
         is_xml = is_xmlrpc_request(request)
         for call in calls:
             try:
