@@ -233,13 +233,13 @@ class RPCDispatcher(object):
         self.rpcmethods = {}        # a dict of RPCMethod objects
         self.jsonrpcdispatcher = JSONRPCDispatcher(json_encoder)
         self.xmlrpcdispatcher = XMLRPCDispatcher()
+        self.register_method(self.system_multicall, 'system.multicall', ['array', 'array'])
 
         if not restrict_introspection:
             self.register_method(self.system_listmethods, 'system.listMethods', ['array'])
             self.register_method(self.system_methodhelp, 'system.methodHelp', ['string', 'string'])
             self.register_method(self.system_methodsignature, 'system.methodSignature', ['array', 'string'])
             self.register_method(self.system_describe, 'system.describe', ['struct'])
-            self.register_method(self.system_multicall, 'system.multicall', ['array', 'array'])
 
         if not restrict_ootb_auth:
             self.register_method(self.system_login, 'system.login', ['boolean', 'string', 'string'])
@@ -267,10 +267,10 @@ class RPCDispatcher(object):
         implements: http://mirrors.talideon.com/articles/multicall.html
         Returns a list of results of functions
         '''
-        
         from .views import is_xmlrpc_request
         request = kwargs.get('request')
         result = []
+        
         is_xml = is_xmlrpc_request(request)
         for call in calls:
             try:
