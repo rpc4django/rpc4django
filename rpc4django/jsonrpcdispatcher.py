@@ -119,12 +119,12 @@ class JSONRPCDispatcher(object):
             return self._encode_result(jsondict.get('id', ''), None, {
                 'message': 'params must be a javascript Array',
                 'code': JSONRPC_BAD_CALL_ERROR})
-        
+
         if not jsondict['method'] in self.funcs:
             return self._encode_result(jsondict.get('id', ''), None, {
                 'message': 'method "%s" is not supported' % jsondict['method'],
                 'code': JSONRPC_PROCEDURE_NOT_FOUND_ERROR})
-        
+
         try:
             method = jsondict.get('method')
             params = tuple(jsondict.get('params', []))
@@ -140,14 +140,14 @@ class JSONRPCDispatcher(object):
             return self._encode_result(jsondict.get('id', ''), None, {
                 'message': repr(e),
                 'code': JSONRPC_SERVICE_ERROR})
-        
+
         return self._encode_result(jsondict.get('id', ''), result, None)
-    
+
     def _dispatch(self, method, params, **kwargs):
         """
         Dispatches the method with the parameters to the underlying method
         """
-        
+
         func = self.funcs.get(method, None)
         # add some magic
         # if request is the first arg of func and request is provided in kwargs we inject it
