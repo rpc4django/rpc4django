@@ -266,7 +266,7 @@ class RPCDispatcher(object):
         implements: http://mirrors.talideon.com/articles/multicall.html
         Returns a list of results of functions
         '''
-        
+
         from .views import is_xmlrpc_request
         request = kwargs.get('request')
         result = []
