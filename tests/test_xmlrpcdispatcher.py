@@ -40,7 +40,8 @@ class TestXMLRPCDispatcher(unittest.TestCase):
         self.dispatcher.register_function(kwargstest, 'kwargstest')
         self.dispatcher.register_function(requestargtest, 'requestargtest')
         self.dispatcher.register_function(withoutargstest, 'withoutargstest')
-
+        self.dispatcher.register_multicall_functions()
+        
     def test_kwargs(self):
         xml = dumps((1, 2), 'kwargstest')
         ret = self.dispatcher.dispatch(xml)
@@ -66,6 +67,7 @@ class TestXMLRPCDispatcher(unittest.TestCase):
         ret = self.dispatcher.dispatch(xml, request='fakerequest')
         out, name = loads(ret)
         self.assertTrue(out[0])
+        
 
     def test_billion_laughs(self):
         payload = """<?xml version="1.0"?>
@@ -87,6 +89,7 @@ class TestXMLRPCDispatcher(unittest.TestCase):
         ret = self.dispatcher.dispatch(payload)
         self.assertRaises(Fault, loads, ret)
 
-
+    
+                                        
 if __name__ == '__main__':
     unittest.main()
