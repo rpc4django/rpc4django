@@ -44,15 +44,9 @@ class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
         method has a different name due to the different parameters it takes
         from the superclass method.
         """
-
         try:
             params, method = xmlrpc.xmlrpc_client.loads(data)
-
-            try:
-                response = self._dispatch(method, params, **kwargs)
-            except TypeError:
-                # Catch unexpected keyword argument error
-                response = self._dispatch(method, params)
+            response = self._dispatch(method, params, **kwargs)
 
             # wrap response in a singleton tuple
             response = (response,)
@@ -76,19 +70,19 @@ class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
         """
 
         func = self.funcs.get(method, None)
-        # add some magic
-        # if request is the first arg of func and request is provided in kwargs we inject it
-        if hasattr(inspect, 'signature'):  # python 3
-            args = list(inspect.signature(func).parameters)
-        else:  # python 2
-            args = inspect.getargspec(func)[0]
-        if args and 'request' in kwargs and args[0] == 'request':
-            request = kwargs.pop('request')
-            params = (request,) + params
+        #add some magic
+        #if request is the first arg of func and request is provided in kwargs we inject it
+        args = inspect.getargspec(func)[0]
+        if 'request' in kwargs:
+            if args[0] == 'request':
+                request = kwargs.pop('request')
+                params = (request,)+params
+            
         if func is not None:
-            if len(kwargs) > 0:
+            try:
                 return func(*params, **kwargs)
-            else:
+            except TypeError:
+                # Catch unexpected keyword argument error
                 return func(*params)
         else:
             raise Exception('method "%s" is not supported' % method)
