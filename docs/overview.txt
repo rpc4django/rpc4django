@@ -21,6 +21,7 @@ Features
 - Customizable RPC method documentation including reST_ 
 - Supports XMLRPC and JSONRPC introspection
 - Supports method signatures (unlike SimpleXMLRPCServer)
+- Supports multicall requests
 - Easy installation and integration with existing Django projects
 - Licensed for inclusion in open source and commercial software
 - Ties in with Django's `authentication and authorization`_
