@@ -1,6 +1,12 @@
 Changelog
 =========
 
+**Version 0.5.0 (03 July 2017)**
+
+- Improve support for PEP3107 function annotations
+- Add multicall support
+- request argument is now provided explicitly
+
 **Version 0.4.0 (30 Apr 2017)**
 
 - Preliminary support for PEP3107 function annotations (`#43`_)
