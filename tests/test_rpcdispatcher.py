@@ -12,7 +12,6 @@ import unittest
 from xml.dom.minidom import parseString
 from django.core.exceptions import ImproperlyConfigured
 
-
 try:
     from rpc4django.rpcdispatcher import rpcmethod, RPCMethod, RPCDispatcher
 except ImproperlyConfigured:
@@ -22,10 +21,10 @@ except ImproperlyConfigured:
     from rpc4django.rpcdispatcher import rpcmethod, RPCMethod, RPCDispatcher
 
 try:
-    from xmlrpclib import Fault, Binary
+    from xmlrpclib import Fault, Binary, loads, dumps
 except ImportError:
-    from xmlrpc.client import Fault, Binary
-
+    from xmlrpc.client import Fault, Binary, loads, dumps
+    
 BINARY_STRING = b'\x97\xd2\xab\xc8\xfc\x98\xad'
 
 
@@ -41,6 +40,11 @@ class TestRPCMethod(unittest.TestCase):
         def test1(arg1):
             return 4
         self.test1 = RPCMethod(test1)
+        
+        @rpcmethod()
+        def test2():
+            return True
+        self.test2 = RPCMethod(test2)
 
     def test_verify_creation(self):
         self.assertEqual(self.add.name, 'my.add')
@@ -50,14 +54,20 @@ class TestRPCMethod(unittest.TestCase):
         self.assertEqual(self.test1.name, 'test1')
         self.assertEqual(self.test1.signature, ['object', 'object'])
         self.assertEqual(self.test1.args, ['arg1'])
+        
+        self.assertEqual(self.test2.name, 'test2')
+        self.assertEqual(self.test2.signature, ['object'])
+        self.assertEqual(self.test2.args, [])
 
     def test_get_retrunvalue(self):
         self.assertEqual(self.add.get_returnvalue(), 'int')
         self.assertEqual(self.test1.get_returnvalue(), 'object')
+        self.assertEqual(self.test2.get_returnvalue(), 'object')
 
     def test_get_params(self):
         self.assertEqual(self.add.get_params(), [{'name': 'a', 'rpctype': 'int'}, {'name': 'b', 'rpctype': 'int'}])
         self.assertEqual(self.test1.get_params(), [{'name': 'arg1', 'rpctype': 'object'}])
+        self.assertEqual(self.test2.get_params(), [])
 
 
 class TestRPCDispatcher(unittest.TestCase):
@@ -95,11 +105,11 @@ class TestRPCDispatcher(unittest.TestCase):
 
     def test_listmethods(self):
         resp = self.d.system_listmethods()
-        self.assertEqual(resp, ['system.describe', 'system.listMethods', 'system.methodHelp', 'system.methodSignature'])
+        self.assertEqual(resp, ['system.describe', 'system.listMethods', 'system.methodHelp', 'system.methodSignature', 'system.multicall'])
 
         self.d.register_method(self.add)
         resp = self.d.system_listmethods()
-        self.assertEqual(resp, ['add', 'system.describe', 'system.listMethods', 'system.methodHelp', 'system.methodSignature'])
+        self.assertEqual(resp, ['add', 'system.describe', 'system.listMethods', 'system.methodHelp', 'system.methodSignature', 'system.multicall'])
 
     def test_methodhelp(self):
         resp = self.d.system_methodhelp('system.methodHelp')
@@ -114,7 +124,7 @@ class TestRPCDispatcher(unittest.TestCase):
 
     def test_xmlrpc_call(self):
         xml = '<?xml version="1.0"?><methodCall><methodName>system.listMethods</methodName><params></params></methodCall>'
-        expresp = "<?xml version='1.0'?><methodResponse><params><param><value><array><data><value><string>system.describe</string></value><value><string>system.listMethods</string></value><value><string>system.methodHelp</string></value><value><string>system.methodSignature</string></value></data></array></value></param></params></methodResponse>"
+        expresp = "<?xml version='1.0'?><methodResponse><params><param><value><array><data><value><string>system.describe</string></value><value><string>system.listMethods</string></value><value><string>system.methodHelp</string></value><value><string>system.methodSignature</string></value><value><string>system.multicall</string></value></data></array></value></param></params></methodResponse>"
         resp = self.d.xmldispatch(xml.encode('utf-8'))
         self.assertEqual(resp.replace('\n', ''), expresp)
 
@@ -166,6 +176,32 @@ class TestRPCDispatcher(unittest.TestCase):
         resp = self.d.jsondispatch(jsontxt.encode('utf-8'), c=1)
         jsondict = json.loads(resp)
         self.assertTrue(jsondict['result'])
+        
+    def test_multicall(self):
+        self.d.register_method(self.add)
+        class Request:
+            content_type = 'text/xml'
+        request = Request 
+        
+        marshalled_list = [
+            {'methodName' : 'add', 'params' : (1,2)},
+            {'methodName' : 'add', 'params' : (2,3)},
+        ]
+        xml = dumps((marshalled_list,), 'system.multicall')
+        ret = self.d.xmldispatch(xml.encode('utf-8'),request=request)
+        out, name = loads(ret)
+        self.assertEqual(out[0][0][0],3)
+        self.assertEqual(out[0][1][0],5)
 
+        request.content_type = 'json' 
+        
+        call = {'method':'system.multicall','params':[marshalled_list],'id':1}
+        jsontxt = json.dumps(call)
+        resp = self.d.jsondispatch(jsontxt.encode('utf-8'),request=request)
+        jsondict = json.loads(resp)
+        self.assertEqual(jsondict['result'][0], 3)
+        self.assertEqual(jsondict['result'][1], 5)
+        
+        
 if __name__ == '__main__':
     unittest.main()

@@ -211,6 +211,5 @@ class TestJSONRPCDispatcher(unittest.TestCase):
         self.assertEqual(jsondict['error']['code'], 102)
         self.assertEqual(jsondict['error']['message'], 'method must be a javascript String')
 
-
 if __name__ == '__main__':
     unittest.main()

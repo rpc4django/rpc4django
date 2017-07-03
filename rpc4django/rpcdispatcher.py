@@ -230,9 +230,10 @@ class RPCDispatcher(object):
 
     def __init__(self, restrict_introspection=False,
                  restrict_ootb_auth=True, json_encoder=None):
-        self.rpcmethods = []        # a list of RPCMethod objects
+        self.rpcmethods = {}        # a dict of RPCMethod objects
         self.jsonrpcdispatcher = JSONRPCDispatcher(json_encoder)
         self.xmlrpcdispatcher = XMLRPCDispatcher()
+        self.register_method(self.system_multicall, 'system.multicall', ['array', 'array'])
 
         if not restrict_introspection:
             self.register_method(self.system_listmethods, 'system.listMethods', ['array'])
@@ -256,16 +257,40 @@ class RPCDispatcher(object):
                                    'summary': method.help,
                                    'params': method.get_params(),
                                    'return': method.get_returnvalue()}
-                                  for method in self.rpcmethods]
+                                  for method in self.rpcmethods.values()]
 
         return description
+
+    def system_multicall(self, calls, **kwargs):
+        '''
+        implements: http://mirrors.talideon.com/articles/multicall.html
+        Returns a list of results of functions
+        '''
+
+        from .views import is_xmlrpc_request
+        request = kwargs.get('request')
+        result = []
+        is_xml = is_xmlrpc_request(request)
+        for call in calls:
+            try:
+                dkwargs = dict(kwargs)
+                if is_xml:
+                    result.append((self.xmlrpcdispatcher._dispatch(call['methodName'], tuple(call['params']), **dkwargs),))
+                else:
+                    result.append(self.jsonrpcdispatcher._dispatch(call['methodName'], tuple(call['params']), **dkwargs))
+            except Exception as e:
+                e = str(e)
+                if is_xml:
+                    e = (e,)
+                result.append(e)
+        return result
 
     def system_listmethods(self):
         '''
         Returns a list of supported methods
         '''
 
-        methods = [method.name for method in self.rpcmethods]
+        methods = list(self.rpcmethods.keys())
         methods.sort()
         return methods
 
@@ -274,9 +299,8 @@ class RPCDispatcher(object):
         Returns documentation for a specified method
         '''
 
-        for method in self.rpcmethods:
-            if method.name == method_name:
-                return method.help
+        if method_name in self.rpcmethods:
+            return self.rpcmethods[method_name].help
 
         # this differs from what implementation in SimpleXMLRPCServer does
         # this will report via a fault or error while SimpleXMLRPCServer
@@ -289,9 +313,9 @@ class RPCDispatcher(object):
         Returns the signature for a specified method
         '''
 
-        for method in self.rpcmethods:
-            if method.name == method_name:
-                return method.signature
+        if method_name in self.rpcmethods:
+            return self.rpcmethods[method_name].signature
+
         raise Fault(APPLICATION_ERROR, 'No method found with name: ' +
                     str(method_name))
 
@@ -367,7 +391,7 @@ class RPCDispatcher(object):
         Returns a list of RPCMethod objects supported by the server
         '''
 
-        return self.rpcmethods
+        return self.rpcmethods.values()
 
     def register_method(self, method, name=None, signature=None, helpmsg=None):
         '''
@@ -392,10 +416,10 @@ class RPCDispatcher(object):
 
         meth = RPCMethod(method, name, signature, helpmsg)
 
-        if meth.name not in self.system_listmethods():
+        if meth.name not in self.rpcmethods:
             self.xmlrpcdispatcher.register_function(method, meth.name)
             self.jsonrpcdispatcher.register_function(method, meth.name)
-            self.rpcmethods.append(meth)
+            self.rpcmethods[meth.name] = meth
 
 
 RESTRICT_INTROSPECTION = getattr(settings,

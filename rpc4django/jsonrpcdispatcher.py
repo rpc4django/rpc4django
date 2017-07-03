@@ -4,8 +4,8 @@ This module implements a JSON 1.0 compatible dispatcher
 see http://json-rpc.org/wiki/specification
 '''
 
-import inspect
 import json
+import inspect
 
 # indent the json output by this many characters
 # 0 does newlines only and None does most compact
@@ -44,7 +44,7 @@ class JSONRPCDispatcher(object):
 
     def __init__(self, json_encoder=None):
         self.json_encoder = json_encoder
-        self.methods = {}
+        self.funcs = {}
 
     def register_function(self, method, external_name):
         '''
@@ -52,7 +52,7 @@ class JSONRPCDispatcher(object):
 
         This method can be called later via the dispatch method.
         '''
-        self.methods[external_name] = method
+        self.funcs[external_name] = method
 
     def _encode_result(self, jsonid, result, error):
         res = {'jsonrpc': '2.0', 'id': jsonid}
@@ -120,37 +120,46 @@ class JSONRPCDispatcher(object):
                 'message': 'params must be a javascript Array',
                 'code': JSONRPC_BAD_CALL_ERROR})
 
-        if jsondict['method'] in self.methods:
-            func = self.methods[jsondict.get('method')]
-            params = jsondict.get('params', [])
-            # add some magic
-            # if request is the first arg of func and request is provided in kwargs we inject it
-            if hasattr(inspect, 'signature'):  # python 3
-                args = list(inspect.signature(func).parameters)
-            else:  # python 2
-                args = inspect.getargspec(func)[0]
-            if args and 'request' in kwargs and args[0] == 'request':
-                request = kwargs.pop('request')
-                params = [request, ] + params
-            try:
-                try:
-                    result = func(*params, **kwargs)
-                except TypeError:
-                    # Catch unexpected keyword argument error
-                    result = func(*params)
-            except JSONRPCException as e:
-                # Custom message and code
-                return self._encode_result(jsondict.get('id', ''), None, {
-                    'message': e.message, 'code': e.code})
-            except Exception as e:
-                # this catches any error from the called method raising
-                # an exception to the wrong number of params being sent
-                # to the method.
-                return self._encode_result(jsondict.get('id', ''), None, {
-                    'message': repr(e),
-                    'code': JSONRPC_SERVICE_ERROR})
-            return self._encode_result(jsondict.get('id', ''), result, None)
-        else:
+        if not jsondict['method'] in self.funcs:
             return self._encode_result(jsondict.get('id', ''), None, {
                 'message': 'method "%s" is not supported' % jsondict['method'],
                 'code': JSONRPC_PROCEDURE_NOT_FOUND_ERROR})
+
+        try:
+            method = jsondict.get('method')
+            params = tuple(jsondict.get('params', []))
+            result = self._dispatch(method, params, **kwargs)
+        except JSONRPCException as e:
+            # Custom message and code
+            return self._encode_result(jsondict.get('id', ''), None, {
+                'message': e.message, 'code': e.code})
+        except Exception as e:
+            # this catches any error from the called method raising
+            # an exception to the wrong number of params being sent
+            # to the method.
+            return self._encode_result(jsondict.get('id', ''), None, {
+                'message': repr(e),
+                'code': JSONRPC_SERVICE_ERROR})
+
+        return self._encode_result(jsondict.get('id', ''), result, None)
+
+    def _dispatch(self, method, params, **kwargs):
+        """
+        Dispatches the method with the parameters to the underlying method
+        """
+
+        func = self.funcs.get(method, None)
+        # add some magic
+        # if request is the first arg of func and request is provided in kwargs we inject it
+        args = inspect.getargspec(func)[0]
+        if 'request' in kwargs and args and args[0] == 'request':
+                request = kwargs.pop('request')
+                params = (request,) + params
+        if func is not None:
+            try:
+                return func(*params, **kwargs)
+            except TypeError:
+                # Catch unexpected keyword argument error
+                return func(*params)
+        else:
+            raise Exception('method "%s" is not supported' % method)
