@@ -4,12 +4,15 @@ Implements an XMLRPC dispatcher
 
 try:
     # Python2
-    from xmlrpclib import Fault, dumps
+    from xmlrpclib import Fault, dumps, Marshaller
     from SimpleXMLRPCServer import SimpleXMLRPCDispatcher
 except ImportError:
     # Python3
-    from xmlrpc.client import Fault, dumps
+    from xmlrpc.client import Fault, dumps, Marshaller
     from xmlrpc.server import SimpleXMLRPCDispatcher
+    
+from collections import OrderedDict
+Marshaller.dispatch[OrderedDict] = Marshaller.dump_struct
 
 import inspect
 from defusedxml import xmlrpc
