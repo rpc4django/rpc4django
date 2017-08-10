@@ -2,6 +2,7 @@
 Implements an XMLRPC dispatcher
 """
 
+import datetime
 try:
     # Python2
     from xmlrpclib import Fault, dumps, Marshaller
@@ -11,17 +12,19 @@ except ImportError:
     from xmlrpc.client import Fault, dumps, Marshaller
     from xmlrpc.server import SimpleXMLRPCDispatcher
     
-from collections import OrderedDict
-Marshaller.dispatch[OrderedDict] = Marshaller.dump_struct
-# Transparently support datetime.date as datetime.datetime
-import datetime
-def dump_date(instance,value, write):
-    value = datetime.datetime.combine(value,datetime.time.min) 
-    return Marshaller.dump_datetime(instance, value, write)
-Marshaller.dispatch[datetime.date] = dump_date
-
 import inspect
 from defusedxml import xmlrpc
+
+from collections import OrderedDict
+Marshaller.dispatch[OrderedDict] = Marshaller.dump_struct
+
+# Transparently support datetime.date as datetime.datetime
+def dump_date(instance, value, write):
+    value = datetime.datetime.combine(value, datetime.time.min) 
+    return Marshaller.dump_datetime(instance, value, write)
+
+
+Marshaller.dispatch[datetime.date] = dump_date
 
 # This method makes the XMLRPC parser (used by loads) safe
 # from various XML based attacks
