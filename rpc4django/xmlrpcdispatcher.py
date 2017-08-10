@@ -13,6 +13,12 @@ except ImportError:
     
 from collections import OrderedDict
 Marshaller.dispatch[OrderedDict] = Marshaller.dump_struct
+# Transparently support datetime.date as datetime.datetime
+import datetime
+def dump_date(instance,value, write):
+    value = datetime.datetime.combine(value,datetime.time.min) 
+    return Marshaller.dump_datetime(instance, value, write)
+Marshaller.dispatch[datetime.date] = dump_date
 
 import inspect
 from defusedxml import xmlrpc
