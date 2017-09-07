@@ -4,6 +4,11 @@ Implements an XMLRPC dispatcher
 
 import datetime
 import sys
+import inspect
+from defusedxml import xmlrpc
+from django.conf import settings
+from collections import OrderedDict
+
 if sys.version_info.major == 2:
     # Python2
     from xmlrpclib import Fault, dumps, Marshaller
@@ -13,11 +18,7 @@ else:
     from xmlrpc.client import Fault, dumps, Marshaller
     from xmlrpc.server import SimpleXMLRPCDispatcher
 
-import inspect
-from defusedxml import xmlrpc
-from django.conf import settings
 
-from collections import OrderedDict
 Marshaller.dispatch[OrderedDict] = Marshaller.dump_struct
 
 
@@ -34,9 +35,9 @@ Marshaller.dispatch[datetime.date] = dump_date
 xmlrpc.monkey_patch()
 
 XMLRPC_USE_DATETIME = getattr(settings,
-                                 'RPC4DJANGO_XMLRPC_USE_DATETIME', True)
+                              'RPC4DJANGO_XMLRPC_USE_DATETIME', True)
 XMLRPC_USE_BUILTIN = getattr(settings,
-                                 'RPC4DJANGO_XMLRPC_USE_BUILTIN', True)
+                             'RPC4DJANGO_XMLRPC_USE_BUILTIN', True)
 
 
 class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
