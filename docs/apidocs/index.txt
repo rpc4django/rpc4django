@@ -76,6 +76,18 @@ functionality of RPC4Django
     pointing to the subclass. It can be used to serialize objects that can't
     otherwise be serialized. Defaults to
     ``django.core.serializers.json.DjangoJSONEncoder``.
+    
+.. envvar:: RPC4DJANGO_XMLRPC_USE_DATETIME
+    
+    If ``True``, ate/time values to be presented as datetime.datetime objects
+    object instead of XMLRPC DateTime.
+    Defaults to ``True``.
+    
+.. envvar:: RPC4DJANGO_XMLRPC_USE_BUILTIN
+    
+    If ``True``, date/time values to be presented as datetime.datetime objects
+    and binary data to be presented as bytes objects.
+    Defaults to ``True``.    
 
 .. _requests with credentials: https://developer.mozilla.org/en/HTTP_access_control#Requests_with_credentials
 .. _preflighted requests: https://developer.mozilla.org/en/HTTP_access_control#Preflighted_requests

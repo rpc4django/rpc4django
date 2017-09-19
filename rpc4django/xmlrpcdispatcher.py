@@ -3,19 +3,22 @@ Implements an XMLRPC dispatcher
 """
 
 import datetime
-try:
+import sys
+import inspect
+from defusedxml import xmlrpc
+from django.conf import settings
+from collections import OrderedDict
+
+if sys.version_info.major == 2:
     # Python2
     from xmlrpclib import Fault, dumps, Marshaller
     from SimpleXMLRPCServer import SimpleXMLRPCDispatcher
-except ImportError:
+else:
     # Python3
     from xmlrpc.client import Fault, dumps, Marshaller
     from xmlrpc.server import SimpleXMLRPCDispatcher
 
-import inspect
-from defusedxml import xmlrpc
 
-from collections import OrderedDict
 Marshaller.dispatch[OrderedDict] = Marshaller.dump_struct
 
 
@@ -30,6 +33,11 @@ Marshaller.dispatch[datetime.date] = dump_date
 # This method makes the XMLRPC parser (used by loads) safe
 # from various XML based attacks
 xmlrpc.monkey_patch()
+
+XMLRPC_USE_DATETIME = getattr(settings,
+                              'RPC4DJANGO_XMLRPC_USE_DATETIME', True)
+XMLRPC_USE_BUILTIN = getattr(settings,
+                             'RPC4DJANGO_XMLRPC_USE_BUILTIN', True)
 
 
 class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
@@ -46,6 +54,8 @@ class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
         self.instance = None
         self.allow_none = True
         self.encoding = None
+        self.use_datetime = XMLRPC_USE_DATETIME
+        self.use_builtin_types = XMLRPC_USE_BUILTIN
 
     def dispatch(self, data, **kwargs):
         """
@@ -58,7 +68,10 @@ class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
         from the superclass method.
         """
         try:
-            params, method = xmlrpc.xmlrpc_client.loads(data)
+            if sys.version_info.major == 2:
+                params, method = xmlrpc.xmlrpc_client.loads(data, self.use_datetime)
+            else:
+                params, method = xmlrpc.xmlrpc_client.loads(data, self.use_datetime, self.use_builtin_types)
             response = self._dispatch(method, params, **kwargs)
 
             # wrap response in a singleton tuple
@@ -69,9 +82,9 @@ class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
         except Fault as fault:
             response = dumps(fault, allow_none=self.allow_none,
                              encoding=self.encoding)
-        except Exception:
+        except Exception as e:
             response = dumps(
-                Fault(1, 'Unknown error'),
+                Fault(1, 'Unknown error, {}'.format(e)),
                 encoding=self.encoding, allow_none=self.allow_none,
             )
 
