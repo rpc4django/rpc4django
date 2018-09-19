@@ -43,3 +43,5 @@ docs/_build/*
 .mr.developer.cfg
 .project
 .pydevproject
+/build_upload.sh
+/build.sh
