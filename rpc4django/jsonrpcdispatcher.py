@@ -64,8 +64,8 @@ class JSONRPCDispatcher(object):
             res['error']['name'] = 'JSONRPCError'
         try:
             return json.dumps(res, indent=JSON_INDENT, cls=self.json_encoder)
-        except:
-            err = {'message': 'failed to encode return value',
+        except Exception as e:
+            err = {'message': 'failed to encode return value, {}'.format(e),
                    'code': JSONRPC_SERVICE_ERROR,
                    'name': 'JSONRPCError'}
 
