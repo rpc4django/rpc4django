@@ -305,8 +305,8 @@ class RPCDispatcher(object):
         # this differs from what implementation in SimpleXMLRPCServer does
         # this will report via a fault or error while SimpleXMLRPCServer
         # just returns an empty string
-        raise Fault(APPLICATION_ERROR, 'No method found with name: ' +
-                    str(method_name))
+        raise Fault(APPLICATION_ERROR,
+                    'No method found with name: ' + str(method_name))
 
     def system_methodsignature(self, method_name):
         '''
@@ -316,8 +316,8 @@ class RPCDispatcher(object):
         if method_name in self.rpcmethods:
             return self.rpcmethods[method_name].signature
 
-        raise Fault(APPLICATION_ERROR, 'No method found with name: ' +
-                    str(method_name))
+        raise Fault(APPLICATION_ERROR,
+                    'No method found with name: ' + str(method_name))
 
     def system_login(self, username, password, **kwargs):
         '''

@@ -155,8 +155,8 @@ class JSONRPCDispatcher(object):
         if args and args[0] == 'self':
             args = args[1:]
         if 'request' in kwargs and args and args[0] == 'request':
-                request = kwargs.pop('request')
-                params = (request,) + params
+            request = kwargs.pop('request')
+            params = (request,) + params
         if func is not None:
             try:
                 return func(*params, **kwargs)
