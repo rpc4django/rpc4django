@@ -12,6 +12,7 @@ SUPPORTED_VERSIONS = {
     '3.4': ('Django<1.9', 'Django<1.10', 'Django<1.11', 'Django<1.12'),
     '3.5': ('Django<1.9', 'Django<1.10', 'Django<1.11', 'Django<1.12'),
     '3.6': ('Django<1.12',),
+    '3.7': ('Django<1.12',),
 }
 
 python_version = os.environ.get('TRAVIS_PYTHON_VERSION')
