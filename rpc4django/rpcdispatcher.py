@@ -19,7 +19,7 @@ except ImportError:
 try:
     # Django 1.x
     from django.core.urlresolvers import get_mod_func
-except ModuleNotFoundError:
+except ImportError:
     # Django 2.x
     from django.urls import get_mod_func
 
