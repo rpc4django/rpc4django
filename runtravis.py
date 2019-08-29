@@ -7,11 +7,11 @@ import sys
 # Handle incompatible versions of Python & Django
 # https://docs.djangoproject.com/en/dev/faq/install/#what-python-version-can-i-use-with-django
 SUPPORTED_VERSIONS = {
-    '2.7': ('Django==1.8.*', 'Django==1.9.*', 'Django==1.10.*', 'Django==1.11.*'),
-    '3.4': ('Django==1.8.*', 'Django==1.9.*', 'Django==1.10.*', 'Django==1.11.*', 'Django==2.0.*'),
-    '3.5': ('Django==1.8.*', 'Django==1.9.*', 'Django==1.10.*', 'Django==1.11.*', 'Django==2.0.*', 'Django==2.1.*', 'Django==2.2.*'),
-    '3.6': ('Django==1.8.*', 'Django==1.9.*', 'Django==1.10.*', 'Django==1.11.*', 'Django==2.0.*', 'Django==2.1.*', 'Django==2.2.*'),  
-    '3.7': ('Django==1.8.*', 'Django==1.9.*', 'Django==1.10.*', 'Django==1.11.*', 'Django==2.0.*', 'Django==2.1.*', 'Django==2.2.*'),
+    '2.7': ('Django==1.9.*', 'Django==1.10.*', 'Django==1.11.*'),
+    '3.4': ('Django==1.9.*', 'Django==1.10.*', 'Django==1.11.*', 'Django==2.0.*'),
+    '3.5': ('Django==1.9.*', 'Django==1.10.*', 'Django==1.11.*', 'Django==2.0.*', 'Django==2.1.*', 'Django==2.2.*'),
+    '3.6': ('Django==1.9.*', 'Django==1.10.*', 'Django==1.11.*', 'Django==2.0.*', 'Django==2.1.*', 'Django==2.2.*'),  
+    '3.7': ('Django==1.9.*', 'Django==1.10.*', 'Django==1.11.*', 'Django==2.0.*', 'Django==2.1.*', 'Django==2.2.*'),
 }
 
 python_version = os.environ.get('TRAVIS_PYTHON_VERSION')

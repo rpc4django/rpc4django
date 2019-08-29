@@ -54,7 +54,7 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
 
-    install_requires=['Django>=1.8', 'defusedxml'],
+    install_requires=['Django>=1.9', 'defusedxml'],
     extras_require={
         "reST": ['docutils >= 0.4'],
     },
