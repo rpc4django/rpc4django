@@ -35,4 +35,4 @@ install:
 
 script:
   - flake8 --ignore=E501,W391 rpc4django
-  - ./runtravis.py
+  - python setup.py test
