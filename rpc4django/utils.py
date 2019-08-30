@@ -1,10 +1,10 @@
-import httplib
-
 try:
     # Python2
+    from httplib import HTTPConnection
     from xmlrpclib import SafeTransport, Transport, ProtocolError
 except ImportError:
     # Python3
+    from http.client import HTTPConnection
     from xmlrpc.client import SafeTransport, Transport, ProtocolError
 
 
@@ -18,7 +18,7 @@ class CookieTransport(SafeTransport):
         self.cookie = None
 
     def make_connection(self, host):
-        h = httplib.HTTP(host)
+        h = HTTPConnection(host)
         return h
 
     def request(self, host, handler, request_body, verbose=0):
