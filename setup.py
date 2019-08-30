@@ -2,8 +2,9 @@ import os
 
 try:
     from setuptools import setup
-except:
+except ImportError:
     from distutils.core import setup
+# import rpc4django.version
 
 
 # setup.py should run from the directory where it is
@@ -19,7 +20,7 @@ RPC4Django Documentation
 
 setup(
     name='rpc4django',
-    version='0.6.0',
+    version='0.6.1',
     description='Handles JSONRPC and XMLRPC requests easily with Django',
     long_description=long_description,
     author='David Fischer',
