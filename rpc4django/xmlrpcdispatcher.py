@@ -30,6 +30,17 @@ def dump_date(instance, value, write):
 
 Marshaller.dispatch[datetime.date] = dump_date
 
+try:
+    # django 1.11 compat
+    from django.utils.deprecation import CallableBool
+
+    def dump_CallableBool(instance, value, write):
+        return Marshaller.dump_bool(instance, value, write)
+    Marshaller.dispatch[CallableBool] = dump_CallableBool
+except ImportError:
+    # django 2.*
+    pass
+
 # This method makes the XMLRPC parser (used by loads) safe
 # from various XML based attacks
 xmlrpc.monkey_patch()
