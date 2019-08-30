@@ -4,7 +4,13 @@ try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
-# import rpc4django.version
+from distutils.util import convert_path
+
+# Get __version__ without loading rpc4django module
+main_ns = {}
+version_path = convert_path('rpc4django/version.py')
+with open(version_path) as version_file:
+    exec(version_file.read(), main_ns)
 
 
 # setup.py should run from the directory where it is
@@ -20,7 +26,7 @@ RPC4Django Documentation
 
 setup(
     name='rpc4django',
-    version='0.6.1',
+    version=main_ns['__version__'],
     description='Handles JSONRPC and XMLRPC requests easily with Django',
     long_description=long_description,
     author='David Fischer',
