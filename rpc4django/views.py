@@ -105,7 +105,7 @@ def check_request_permission(request, request_format='xml'):
                     logger.warn('AuthenticationMiddleware is not enabled')
                     response = False
                 elif (callable(user.is_anonymous) and user.is_anonymous()) or \
-                (not callable(user.is_anonymous) and user.is_anonymous):
+                     (not callable(user.is_anonymous) and user.is_anonymous):
                     # ensure the user is logged in
                     logger.info('User "%s" is NOT authorized' % (str(user)))
                     response = False
