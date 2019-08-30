@@ -45,3 +45,4 @@ docs/_build/*
 .pydevproject
 /build_upload.sh
 /build.sh
+/.settings/
