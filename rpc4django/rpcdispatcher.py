@@ -32,9 +32,9 @@ if sys.version_info.major == 2:
 else:
     # Python3
     from xmlrpc.client import Fault
-    
 
-from defusedxml import xmlrpc
+
+from defusedxml import xmlrpc  # noqa
 
 
 # This method makes the XMLRPC parser (used by loads) safe
