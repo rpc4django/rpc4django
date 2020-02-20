@@ -12,6 +12,7 @@ SUPPORTED_VERSIONS = {
     '3.5': ('Django==1.9.*', 'Django==1.10.*', 'Django==1.11.*', 'Django==2.0.*', 'Django==2.1.*', 'Django==2.2.*'),
     '3.6': ('Django==1.9.*', 'Django==1.10.*', 'Django==1.11.*', 'Django==2.0.*', 'Django==2.1.*', 'Django==2.2.*'),  
     '3.7': ('Django==1.9.*', 'Django==1.10.*', 'Django==1.11.*', 'Django==2.0.*', 'Django==2.1.*', 'Django==2.2.*'),
+    '3.8': ('Django==1.9.*', 'Django==1.10.*', 'Django==1.11.*', 'Django==2.0.*', 'Django==2.1.*', 'Django==2.2.*'),
 }
 
 python_version = os.environ.get('TRAVIS_PYTHON_VERSION')
