@@ -110,7 +110,7 @@ class XMLRPCDispatcher(SimpleXMLRPCDispatcher):
         # add some magic
         # if request is the first arg of func and request is provided in kwargs we inject it
         try:  # Python 3
-            full_args = inspect.getfullargspec(method)
+            full_args = inspect.getfullargspec(func)
             args = full_args.args
         except AttributeError:  # Python 2
             args = inspect.getargspec(func)[0]
