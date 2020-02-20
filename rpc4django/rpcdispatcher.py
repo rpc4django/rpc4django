@@ -5,30 +5,34 @@ This module contains the classes necessary to handle both
 It also contains a decorator to mark methods as rpc methods.
 '''
 
+import sys
 import inspect
 import pydoc
+import django
 from django.contrib.auth import authenticate, login, logout
 from .jsonrpcdispatcher import JSONRPCDispatcher, json
 from .xmlrpcdispatcher import XMLRPCDispatcher
 from django.conf import settings
+
 try:
     from importlib import import_module
 except ImportError:
     from django.utils.importlib import import_module
 
-try:
+if django.VERSION[0] == 1:
     # Django 1.x
     from django.core.urlresolvers import get_mod_func
-except ImportError:
+else:
     # Django 2.x
     from django.urls import get_mod_func
 
-try:
+if sys.version_info.major == 2:
     # Python2.x
     from xmlrpclib import Fault
-except ImportError:
+else:
     # Python3
     from xmlrpc.client import Fault
+    
 
 from defusedxml import xmlrpc
 

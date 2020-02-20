@@ -46,3 +46,4 @@ docs/_build/*
 /build_upload.sh
 /build.sh
 /.settings/
+.history

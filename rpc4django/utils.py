@@ -1,8 +1,10 @@
-try:
+import sys
+
+if sys.version_info.major == 2:
     # Python2
     from httplib import HTTPConnection
     from xmlrpclib import SafeTransport, Transport, ProtocolError
-except ImportError:
+else:
     # Python3
     from http.client import HTTPConnection
     from xmlrpc.client import SafeTransport, Transport, ProtocolError
