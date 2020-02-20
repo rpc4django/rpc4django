@@ -109,15 +109,7 @@ class RPCMethod(object):
         # If we're using Python 3, look for function annotations, but allow
         # the signature parameter override them.
 
-        try:
-            args, varargs, keywords, defaults = inspect.getargspec(method)
-            # varargs = None
-            # varkw = None
-            # kwonlyargs = None
-            # kwonlydefaults = None
-            annotations = {}
-
-        except ValueError:
+        try:  # Python 3
             full_args = inspect.getfullargspec(method)
             args = full_args.args
             # varargs = full_args.varargs
@@ -126,6 +118,14 @@ class RPCMethod(object):
             # kwonlyargs = full_args.kwonlyargs
             # kwonlydefaults = full_args.kwonlydefaults
             annotations = full_args.annotations
+
+        except AttributeError:  # Python 2
+            args, varargs, keywords, defaults = inspect.getargspec(method)
+            # varargs = None
+            # varkw = None
+            # kwonlyargs = None
+            # kwonlydefaults = None
+            annotations = {}
 
         self.args = [arg
                      for arg in args
