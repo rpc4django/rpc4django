@@ -47,3 +47,4 @@ docs/_build/*
 /build.sh
 /.settings/
 .history
+*.code-workspace
