@@ -15,10 +15,22 @@ import os
 import sys
 from datetime import datetime
 
+BASE_DIR = os.path.abspath(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+)
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#sys.path.append(os.path.abspath('.'))
+sys.path.append(BASE_DIR)
+
+
+# Get __version__ without loading rpc4django module
+ns = {}
+version_path = os.path.join(BASE_DIR, "rpc4django/version.py")
+with open(version_path, "r", encoding="utf-8") as version_file:
+    exec(version_file.read(), ns)
+rpc4django_version = ns["__version__"]
 
 # -- General configuration -----------------------------------------------------
 
@@ -47,7 +59,8 @@ copyright = u'%d, the respective authors' %datetime.now().year
 # built documents.
 #
 # The short X.Y version.
-version = '0.6.3'
+version = rpc4django_version
+
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -93,7 +106,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  Major themes that come with
 # Sphinx are currently 'default' and 'sphinxdoc'.
-html_theme = 'default'
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
