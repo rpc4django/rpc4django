@@ -6,6 +6,7 @@ XML RPC Dispatcher Tests
 
 import unittest
 from django.core.exceptions import ImproperlyConfigured
+from decimal import Decimal
 
 
 try:
@@ -25,6 +26,9 @@ except ImportError:
 class TestXMLRPCDispatcher(unittest.TestCase):
 
     def setUp(self):
+        def echotest(a):
+            return a
+
         def kwargstest(a, b, **kwargs):
             if kwargs.get('c', None) is not None:
                 return True
@@ -37,6 +41,7 @@ class TestXMLRPCDispatcher(unittest.TestCase):
             return request
 
         self.dispatcher = XMLRPCDispatcher()
+        self.dispatcher.register_function(echotest, 'echotest')
         self.dispatcher.register_function(kwargstest, 'kwargstest')
         self.dispatcher.register_function(requestargtest, 'requestargtest')
         self.dispatcher.register_function(withoutargstest, 'withoutargstest')
@@ -89,6 +94,13 @@ class TestXMLRPCDispatcher(unittest.TestCase):
         ret = self.dispatcher.dispatch(payload)
         self.assertRaises(Fault, loads, ret)
 
+    def test_decimal(self):
+        d = Decimal('1.23456')
+        xml = dumps((d,), 'echotest')
+        ret = self.dispatcher.dispatch(xml)
+        out, name = loads(ret)
+        self.assertEqual(d, out[0])
+        self.assertTrue(isinstance(out[0], Decimal))
     
                                         
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 _MAJOR = 0
 _MINOR = 6
-_PATCH = 3
+_PATCH = 4
 
 __version__ = str(_MAJOR) + '.' + str(_MINOR) + '.' + str(_PATCH)
 

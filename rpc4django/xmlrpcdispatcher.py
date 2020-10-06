@@ -8,6 +8,7 @@ import inspect
 from defusedxml import xmlrpc
 from django.conf import settings
 from collections import OrderedDict
+from decimal import Decimal
 
 if sys.version_info.major == 2:
     # Python2
@@ -22,6 +23,7 @@ else:
 Marshaller.dispatch[OrderedDict] = Marshaller.dump_struct
 
 
+
 # Transparently support datetime.date as datetime.datetime
 def dump_date(instance, value, write):
     value = datetime.datetime.combine(value, datetime.time.min)
@@ -29,6 +31,17 @@ def dump_date(instance, value, write):
 
 
 Marshaller.dispatch[datetime.date] = dump_date
+
+
+# Add support for decimal
+def dump_decimal(instance, value, write):
+    value = float(value)
+    write("<value><bigdecimal>")
+    write(str(value))
+    write("</bigdecimal></value>\n")
+
+
+Marshaller.dispatch[Decimal] = dump_decimal
 
 try:
     # django 1.11 compat
